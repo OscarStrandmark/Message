@@ -4,8 +4,10 @@ import javax.swing.JPanel;
 
 public class Logger {
 
-	public Logger() {
-
+	private String filepath;
+	
+	public Logger(String filepath) {
+		this.filepath = filepath;
 	}
 
 	public void writeToLog(String txt) {

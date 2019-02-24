@@ -23,7 +23,7 @@ public class MediaMessage extends Message{
 		this.image = image;
 	}
 
-	public List<User> getTo() {
+	public List<User> getReceivers() {
 		return to;
 	}
 

@@ -20,11 +20,25 @@ public class Connection {
 	}
 	
 	public void sendObject(Object obj) {
-		
+		try {
+			oos.writeObject(obj);
+			oos.flush();
+		} catch (Exception e) {
+			System.err.println(e);
+		}
 	}
 	
 	public void connect(User user) {
-		
+		try {
+			socket = new Socket(address,port);
+			ois = new ObjectInputStream(socket.getInputStream());
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			oos.writeObject(user);
+			oos.flush();
+			
+		} catch (Exception e) {
+			System.err.println(e);
+		}
 	}
 	
 	public void disconnect() {
