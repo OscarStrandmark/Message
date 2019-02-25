@@ -16,7 +16,8 @@ public class Connection {
 	private int port;
 	
 	public Connection(String address, int port) {
-		
+		this.address = address;
+		this.port = port;
 	}
 	
 	public void sendObject(Object obj) {
