@@ -15,6 +15,8 @@ public class Controller {
 	private List<User> connectedUsers;
 	private List<User> contacts;
 	
+	private String test = "TEST";
+	
 	public Controller() {
 	
 	}
