@@ -14,33 +14,15 @@ public class ConnectedUsersWindow {
 	//JList<String> myList = new JList<String>(data);
 
 	private JFrame frame;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ConnectedUsersWindow window = new ConnectedUsersWindow();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the application.
-	 */
-	public ConnectedUsersWindow() {
+	private JList list;
+	
+	private MainFrame mainframe;
+	
+	public ConnectedUsersWindow(MainFrame mainframe) {
+		this.mainframe = mainframe;
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1000, 700);
@@ -51,7 +33,7 @@ public class ConnectedUsersWindow {
 		scrollPane.setBounds(15, 29, 948, 507);
 		frame.getContentPane().add(scrollPane);
 		
-		JList list = new JList();
+		list = new JList();
 		
 		scrollPane.setViewportView(list);
 		

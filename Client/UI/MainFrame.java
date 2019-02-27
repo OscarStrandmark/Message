@@ -96,7 +96,7 @@ public class MainFrame extends JFrame {
 			}
 
 			if (e.getSource() == btnConnectedUsers) {
-				new ConnectedUsersFrame(thisWindow);
+				new ConnectedUsersWindow(thisWindow);
 			}
 		}
 	}
