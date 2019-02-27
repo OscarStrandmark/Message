@@ -1,19 +1,23 @@
 package UI;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
+import shared.Message;
 import shared.User;
 
 public class MainFrame extends JFrame {
@@ -51,36 +55,52 @@ public class MainFrame extends JFrame {
 
 		ButtonListener listener = new ButtonListener();
 
-		btnContacts = new JButton("Kontakter");
+		btnContacts = new JButton("Contacts");
 		btnContacts.addActionListener(listener);
 		panel.add(btnContacts);
 
-		btnNewMessage = new JButton("Nytt meddelande");
+		btnNewMessage = new JButton("New Message");
 		btnNewMessage.addActionListener(listener);
 		panel.add(btnNewMessage);
 
-		btnConnectedUsers = new JButton("Anslutna användare");
+		btnConnectedUsers = new JButton("Connected Users");
 		btnConnectedUsers.addActionListener(listener);
 		panel.add(btnConnectedUsers);
-
-		JPanel panel_1 = new JPanel();
-		contentPane.add(panel_1, BorderLayout.WEST);
-
-		JList<User> list = new JList<User>();
-		panel_1.add(list);
-
-		JPanel panel_2 = new JPanel();
-		contentPane.add(panel_2, BorderLayout.CENTER);
-
-		// WEST
 		
+		// WEST
 		JScrollPane messagesRecievedPane = new JScrollPane();
-		messagesRecieved = new JList();
+		Message[] msg = {new Message(new User("txt",new ImageIcon()))};
+		messagesRecieved = new JList<Message>(msg);
 		messagesRecievedPane.add(messagesRecieved);
-		contentPane.add(messagesRecievedPane);
+		contentPane.add(messagesRecievedPane,BorderLayout.WEST);
+		
+		//CENTER
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new BorderLayout(0, 0));
+		
+		JPanel northPanel = new JPanel();
+		centerPanel.add(northPanel, BorderLayout.NORTH);
+		northPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		
+		JLabel lblImage = new JLabel("Image");
+		northPanel.add(lblImage);
+		
+		JLabel lblName = new JLabel("Name");
+		northPanel.add(lblName);
+		
+		JLabel lblTimestamp = new JLabel("Timestamp");
+		northPanel.add(lblTimestamp);
+		centerPanel.add(northPanel,BorderLayout.NORTH);
+		
+		JTextPane jtp = new JTextPane();
+		centerPanel.add(jtp,BorderLayout.CENTER);
 	}
 
 	public void sendMessage() {
+		
+	}
+	
+	public void addRecipients(List<User> recipients) {
 		
 	}
 	
@@ -88,15 +108,15 @@ public class MainFrame extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 
 			if (e.getSource() == btnContacts) {
-				new ContactFrame(thisWindow);
+				new ContactWindow(ui);
 			}
 
 			if (e.getSource() == btnNewMessage) {
-				new MessageFrame(thisWindow);
+				new MessageFrame(ui);
 			}
 
 			if (e.getSource() == btnConnectedUsers) {
-				new ConnectedUsersWindow(thisWindow);
+				new ConnectedUsersWindow(ui);
 			}
 		}
 	}

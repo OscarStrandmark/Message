@@ -29,4 +29,12 @@ public class UIHandler {
 	public void showMainWindow() {
 		JFrame mainWindow = new MainFrame(this);
 	}
+
+	public List<User> getConnected() {
+		return controller.getConnectedUsers();
+	}
+
+	public List<User> getContacts() {
+		return controller.getContacts();
+	}
 }

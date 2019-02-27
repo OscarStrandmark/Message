@@ -1,42 +1,50 @@
 package UI;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import shared.User;
 
 public class MessageFrame extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-
+	private JTextField textRecipients;
+	private JTextField textImgPath;
+	
+	private JTextArea textArea;
+	
 	private JButton btnAddReciever;
+	private JButton btnAddImage;
 	private JButton btnSend;
 	
 	private MessageFrame thisWindow = this;
-	private MainFrame mainframe;
+	private UIHandler ui;
+	
+	private List<User> recipients;
+	private String MessageText;
+	private ImageIcon MessageImage;
 	
 	
-	public MessageFrame(MainFrame mainframe) {
-		this.mainframe = mainframe;
+	
+	public MessageFrame(UIHandler ui) {
+		this.ui = ui;
 		init();
 	}
 
 	private void init() {
-		setAlwaysOnTop(true);
+		requestFocus();
 		setBounds(100, 100, 1000, 700);
 		setResizable(false);
 		setVisible(true);
@@ -46,18 +54,18 @@ public class MessageFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		textField = new JTextField();
-		textField.setEditable(false);
-		textField.setBounds(10, 11, 803, 36);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		textRecipients = new JTextField();
+		textRecipients.setEditable(false);
+		textRecipients.setBounds(10, 11, 803, 36);
+		contentPane.add(textRecipients);
+		textRecipients.setColumns(10);
 
 		btnAddReciever = new JButton("Add reciever");
 		btnAddReciever.setBounds(823, 11, 151, 36);
 		btnAddReciever.addActionListener(new ButtonListener());
 		contentPane.add(btnAddReciever);
 
-		JTextArea textArea = new JTextArea();
+		textArea = new JTextArea();
 		textArea.setBounds(10, 58, 964, 487);
 		contentPane.add(textArea);
 
@@ -66,14 +74,19 @@ public class MessageFrame extends JFrame {
 		btnSend.addActionListener(new ButtonListener());
 		contentPane.add(btnSend);
 
-		textField_1 = new JTextField();
-		textField_1.setBounds(10, 603, 836, 36);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
+		textImgPath = new JTextField();
+		textImgPath.setBounds(10, 603, 836, 36);
+		contentPane.add(textImgPath);
+		textImgPath.setColumns(10);
 
-		JButton btnNewButton_1 = new JButton("Add image");
-		btnNewButton_1.setBounds(10, 556, 118, 36);
-		contentPane.add(btnNewButton_1);
+		btnAddImage = new JButton("Add image");
+		btnAddImage.setBounds(10, 556, 118, 36);
+		btnAddImage.addActionListener(new ButtonListener());
+		contentPane.add(btnAddImage);
+	}
+	
+	public void setRecipients(List<User> recipients) {
+		this.recipients = recipients;
 	}
 
 	private class ButtonListener implements ActionListener {
@@ -81,12 +94,23 @@ public class MessageFrame extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			
 			if(e.getSource() == btnAddReciever) {
-				new MessageRecipientsFrame(thisWindow);
+				new MessageRecipientsFrame(ui,thisWindow);
 			}
 			
 			if(e.getSource() == btnSend) {
-				mainframe.sendMessage();
 				setVisible(false);
+			}
+			
+			if(e.getSource() == btnAddImage) {
+				JFileChooser JFC = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG & PNG Images", "jpg", "png");
+				JFC.setFileFilter(filter);
+				int optionpicked = JFC.showOpenDialog(null);
+				if (optionpicked == JFileChooser.APPROVE_OPTION) {
+					File file = JFC.getSelectedFile();
+					MessageImage = new ImageIcon(file.getPath());
+					textImgPath.setText(file.getPath());
+				}
 			}
 		}
 	}

@@ -18,10 +18,10 @@ public class ConnectedUsersWindow {
 	private JList list = new JList();
 	private JButton btnCloseWindow = new JButton("Close Window");
 
-	private MainFrame mainframe;
+	private UIHandler ui;
 
-	public ConnectedUsersWindow(MainFrame mainframe) {
-		this.mainframe = mainframe;
+	public ConnectedUsersWindow(UIHandler ui) {
+		this.ui = ui;
 		initialize();
 	}
 

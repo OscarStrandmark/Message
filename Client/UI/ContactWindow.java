@@ -14,24 +14,22 @@ import java.awt.Font;
 
 public class ContactWindow {
 
-	private JFrame frame = new JFrame("Kontakter");
+	private JFrame frame = new JFrame("Contacts");
 	private JScrollPane scrollPane = new JScrollPane();
 	private JList listContacts = new JList();
-	private JLabel lblKontakter = new JLabel("Kontakter");
+	private JLabel lblKontakter = new JLabel("Contacts");
 	private JButton btnClose = new JButton("Close");
 	private final JScrollPane scrollPane_1 = new JScrollPane();
-	private final JLabel lblAnslutnaAnvndare = new JLabel("Anslutna Användare");
+	private final JLabel lblAnslutnaAnvndare = new JLabel("Connected Users");
 	private final JList listUsers = new JList();
-	private final JButton btnFromContacts = new JButton("----->");
-	private final JButton btnFromUsers = new JButton("<-----");
+	private JButton btnFromContacts = new JButton("----->");
+	private JButton btnFromUsers = new JButton("<-----");
+
+	private UIHandler ui;
 
 
-
-	public static void main(String[] args) {
-		ContactWindow ctw = new ContactWindow();
-	}
-
-	public ContactWindow() {
+	public ContactWindow(UIHandler ui) {
+		this.ui = ui;
 		initialize();
 	}
 

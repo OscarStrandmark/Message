@@ -2,13 +2,19 @@ package UI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -23,11 +29,22 @@ public class MessageRecipientsFrame extends JFrame {
 	private JList<User> listContacts;
 	private JList<User> listRecipients;
 
-	private MessageFrame parent;
-
-	public MessageRecipientsFrame(MessageFrame parent) {
-		this.parent = parent;
+	private UIHandler ui;
+	private MessageFrame msgWindow;
+	private JFrame thisWindow = this;
+	
+	private JButton btnDone;
+	private JButton btnAdd;
+	private JButton btnRemove;
+	
+	private List<User> recipients;
+	
+	public MessageRecipientsFrame(UIHandler ui, MessageFrame msgWindow) {
+		this.ui = ui;
+		this.msgWindow = msgWindow;
 		init();
+		//TODO
+		//initLists();
 		
 	}
 
@@ -84,9 +101,50 @@ public class MessageRecipientsFrame extends JFrame {
 		lblRecipients.setHorizontalAlignment(SwingConstants.CENTER);
 		scrollPane_2.setColumnHeaderView(lblRecipients);
 
-		JButton btnNewButton = new JButton("Done");
-		btnNewButton.setBounds(845, 587, 119, 39);
-		panel.add(btnNewButton);
+		btnDone = new JButton("Done");
+		btnDone.setBounds(845, 587, 119, 39);
+		btnDone.addActionListener(new ButtonListener());
+		panel.add(btnDone);
+		
+		btnAdd = new JButton(">");
+		btnAdd.setBounds(525, 300, 48, 48);
+		btnAdd.addActionListener(new ButtonListener());
+		panel.add(btnAdd);
+		
+		btnRemove = new JButton("<");
+		btnRemove.setBounds(525, 350, 48, 48);
+		btnRemove.addActionListener(new ButtonListener());
+		panel.add(btnRemove);
 	}
 
+	private void initLists() {
+		List<User> connected = ui.getConnected();
+		List<User> contacts  = ui.getContacts();
+		
+		DefaultListModel<User> modelConnected = new DefaultListModel<User>();
+		DefaultListModel<User> modelContacts  = new DefaultListModel<User>();
+		
+		Iterator<User> connectedIter = connected.iterator();
+		while(connectedIter.hasNext()) {
+			modelConnected.addElement(connectedIter.next());
+		}
+		
+		Iterator<User> contactIter = contacts.iterator();
+		while(contactIter.hasNext()) {
+			modelContacts.addElement(contactIter.next());
+		}
+		
+		listConnectedUsers.setModel(modelConnected);
+		listContacts.setModel(modelContacts);
+	}
+
+	private class ButtonListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == btnDone) {
+				msgWindow.setRecipients(recipients);
+				thisWindow.dispose();
+			}
+		}
+	}
 }
