@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -56,6 +57,7 @@ public class LoginFrame extends JFrame {
 		contentPane.add(lblUsername);
 
 		btnLogIn.setBounds(289, 385, 89, 23);
+		btnLogIn.addActionListener(new ButtonListener());
 		contentPane.add(btnLogIn);
 
 		avatarPane = new JPanel();
@@ -86,7 +88,15 @@ public class LoginFrame extends JFrame {
 			}
 
 			if (e.getSource() == btnLogIn) {
-				uiHandler.logIn(username, avatar);
+
+				if (txtUsername.getText().length() <= 0) {
+					JOptionPane.showMessageDialog(null, "Username must be longer", "ERROR", JOptionPane.ERROR_MESSAGE);
+				} else {
+					uiHandler.logIn(username, avatar);
+					setVisible(false);
+					uiHandler.showMainWindow();
+				}
+
 			}
 		}
 	}

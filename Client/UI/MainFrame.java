@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -17,17 +18,19 @@ import shared.User;
 
 public class MainFrame extends JFrame {
 
+	private UIHandler ui;
+	
 	private JPanel contentPane;
 
 	private JButton btnContacts;
 	private JButton btnNewMessage;
 	private JButton btnConnectedUsers;
 
-	public static void main(String[] args) {
-		JFrame w = new MainFrame();
-	}
-
-	public MainFrame() {
+	private MainFrame thisWindow = this;
+	
+	private JList messagesRecieved;
+	public MainFrame(UIHandler ui) {
+		this.ui = ui;
 		init();
 	}
 
@@ -70,21 +73,30 @@ public class MainFrame extends JFrame {
 		contentPane.add(panel_2, BorderLayout.CENTER);
 
 		// WEST
+		
+		JScrollPane messagesRecievedPane = new JScrollPane();
+		messagesRecieved = new JList();
+		messagesRecievedPane.add(messagesRecieved);
+		contentPane.add(messagesRecievedPane);
 	}
 
+	public void sendMessage() {
+		
+	}
+	
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 
 			if (e.getSource() == btnContacts) {
-				new ContactFrame();
+				new ContactFrame(thisWindow);
 			}
 
 			if (e.getSource() == btnNewMessage) {
-				new MessageFrame();
+				new MessageFrame(thisWindow);
 			}
 
 			if (e.getSource() == btnConnectedUsers) {
-				new ConnectedUsersFrame();
+				new ConnectedUsersFrame(thisWindow);
 			}
 		}
 	}
