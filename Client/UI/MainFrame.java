@@ -9,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import shared.User;
@@ -24,7 +26,7 @@ public class MainFrame extends JFrame {
 	public static void main(String[] args) {
 		JFrame w = new MainFrame();
 	}
-	
+
 	public MainFrame() {
 		init();
 	}
@@ -39,14 +41,13 @@ public class MainFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 
-		
-		//NORTH
+		// NORTH
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.NORTH);
 		panel.setLayout(new GridLayout(1, 3, 0, 0));
 
 		ButtonListener listener = new ButtonListener();
-		
+
 		btnContacts = new JButton("Kontakter");
 		btnContacts.addActionListener(listener);
 		panel.add(btnContacts);
@@ -67,52 +68,24 @@ public class MainFrame extends JFrame {
 
 		JPanel panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.CENTER);
-		
-		
-		//WEST
+
+		// WEST
 	}
-	
+
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 
-			if(e.getSource() == btnContacts) {
+			if (e.getSource() == btnContacts) {
 				new ContactFrame();
 			}
-			
-			if(e.getSource() == btnNewMessage) {
+
+			if (e.getSource() == btnNewMessage) {
 				new MessageFrame();
 			}
-			
-			if(e.getSource() == btnConnectedUsers) {
+
+			if (e.getSource() == btnConnectedUsers) {
 				new ConnectedUsersFrame();
 			}
-		}
-	}
-	
-	private class ContactFrame extends JFrame {
-		public ContactFrame() {
-			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			setBounds(100, 100, 1000, 700);
-			setResizable(false);
-			setVisible(true);
-		}
-	}
-	
-	private class MessageFrame extends JFrame {
-		public MessageFrame() {
-			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			setBounds(100, 100, 1000, 700);
-			setResizable(false);
-			setVisible(true);
-		}
-	}
-	
-	private class ConnectedUsersFrame extends JFrame {
-		public ConnectedUsersFrame() {
-			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			setBounds(100, 100, 1000, 700);
-			setResizable(false);
-			setVisible(true);
 		}
 	}
 }
