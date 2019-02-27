@@ -26,17 +26,26 @@ public class Connection {
 		this.controller = controller;
 		this.port = port;
 		new ClientAccepter().start();
-		new SendMessageHandler().start();
+//		User user = new User("Hej");
+//		Message mes = new Message(user);
+//		sendMessage(mes);
+		this.messageBuffer = new Buffer<Message>();
+		User userT = new User("Hej");
+		Message msg = new Message(userT);
+		sendMessage(msg);
+		
 	}
 	
 	public void addConnection(User user, Client client) {
 		connections.put(user, client);
 	}
 	
-	public void sendMessage(UpdateMessage msg) {
+	public void sendMessage(Message msg) {
 		messageBuffer.put(msg);
+		new SendMessageHandler().start();
 	}
 	
+
 	private class ClientAccepter extends Thread {
 		public void run() {
 			try (ServerSocket serverSocket = new ServerSocket(port)){
@@ -58,11 +67,12 @@ public class Connection {
 
 	private class SendMessageHandler extends Thread {
 		public void run() {
-			Message msg = null;
+//			Message msg = null;
 			while(true) {
 				try {
-					msg = messageBuffer.get();
-					controller.logMessage(msg);
+					Message msg = messageBuffer.get();
+
+//					controller.logMessage(msg); finns i controller redan, behövs kanske inte?
 					if(msg instanceof MediaMessage) {
 						List<User> receivers = ((MediaMessage) msg).getReceivers();
 						Iterator<User> receiverIter = receivers.iterator();

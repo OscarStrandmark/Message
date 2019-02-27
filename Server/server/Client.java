@@ -58,10 +58,13 @@ public class Client {
 	
 	private class ClientReceiver extends Thread {
 		public void run() {
-			while(true) {
-				
+			while (true) try {
+				Message msg;
+				msg = (Message) ois.readObject();
+				controller.processMessage(msg);
+			} catch ( Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
-
 }

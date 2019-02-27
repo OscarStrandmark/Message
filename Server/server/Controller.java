@@ -15,8 +15,10 @@ public class Controller {
 	private Logger log;
 	
 	public Controller() {
-		new Connection(this,PORT);
-		log = new Logger(LOGFILEPATH);
+//		new Connection(this,PORT);
+		
+		Connection con = new Connection(this, PORT);
+//		log = new Logger(LOGFILEPATH);
 	}
 	
 	public void addnewUser(User user, Client client) {
@@ -30,6 +32,11 @@ public class Controller {
 	}
 	
 	public void logMessage(Message msg) {
-		
+		//todo
+	}
+	
+	public synchronized void processMessage(Message msg) {
+		logMessage(msg);
+		connection.sendMessage(msg);
 	}
 }
