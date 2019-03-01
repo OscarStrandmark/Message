@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 
-public class MediaMessage extends Message{
+public class MediaMessage extends Message {
 	
 	private static final long serialVersionUID = 6318594750448202389L;
 	
@@ -25,6 +25,10 @@ public class MediaMessage extends Message{
 
 	public List<User> getReceivers() {
 		return to;
+	}
+	
+	public String getSender() {
+		return super.getSender();
 	}
 
 	public String getText() {
