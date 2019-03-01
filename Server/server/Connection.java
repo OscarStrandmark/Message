@@ -30,7 +30,7 @@ public class Connection {
 //		Message mes = new Message(user);
 //		sendMessage(mes);
 		this.messageBuffer = new Buffer<Message>();
-		User userT = new User("Hej");
+		User userT = new User("Hej",null);
 		Message msg = new Message(userT);
 		sendMessage(msg);
 		

@@ -1,7 +1,7 @@
 package server;
 
 import java.util.List;
-
+import server.Logger;
 import shared.Message;
 import shared.UpdateMessage;
 import shared.User;
