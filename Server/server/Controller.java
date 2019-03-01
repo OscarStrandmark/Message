@@ -8,7 +8,7 @@ import shared.User;
 
 public class Controller {
 
-	private static final int PORT = 1337;
+	private static final int PORT = 720;
 	private static final String LOGFILEPATH = "";
 	private List<User> connectedUsers;
 	private Connection connection;
@@ -37,6 +37,8 @@ public class Controller {
 	
 	public synchronized void processMessage(Message msg) {
 		logMessage(msg);
+		System.out.println("Meddelande: "+msg.toString()+" är i controller/processMessage()");
+
 		connection.sendMessage(msg);
 	}
 }

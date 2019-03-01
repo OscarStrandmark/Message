@@ -30,9 +30,9 @@ public class Connection {
 //		Message mes = new Message(user);
 //		sendMessage(mes);
 		this.messageBuffer = new Buffer<Message>();
-		User userT = new User("Hej",null);
-		Message msg = new Message(userT);
-		sendMessage(msg);
+//		User userT = new User("Hej",null);
+//		Message msg = new Message(userT);
+//		sendMessage(msg);
 		
 	}
 	
@@ -42,6 +42,7 @@ public class Connection {
 	
 	public void sendMessage(Message msg) {
 		messageBuffer.put(msg);
+		System.out.println("Meddelandet lagt pÃ¥ buffert i connection: SendMessageHandler startas");
 		new SendMessageHandler().start();
 	}
 	
@@ -72,7 +73,7 @@ public class Connection {
 				try {
 					Message msg = messageBuffer.get();
 
-//					controller.logMessage(msg); finns i controller redan, behövs kanske inte?
+//					controller.logMessage(msg); finns i controller redan, behï¿½vs kanske inte?
 					if(msg instanceof MediaMessage) {
 						List<User> receivers = ((MediaMessage) msg).getReceivers();
 						Iterator<User> receiverIter = receivers.iterator();
