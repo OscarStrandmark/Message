@@ -22,8 +22,9 @@ public class Logger {
 	private BufferedWriter bw;
 	private BufferedReader br;
 	private LoggerUI ui;
+	private Logger instance = new Logger();
 	
-	public Logger() {
+	private Logger() {
 		ui = new LoggerUI(this);
 		try {
 			bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILENAME)));
@@ -33,6 +34,9 @@ public class Logger {
 		}
 	}
 
+	public Logger getInstance() {
+		return instance;
+	}
 	public void logConnect(String username) {
 		try {
 			String str = getDateFormatted() + " " + "User: " + username + " " + "connected to the server.";

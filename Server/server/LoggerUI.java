@@ -20,9 +20,7 @@ import com.github.lgooddatepicker.components.DateTimePicker;
 public class LoggerUI extends JFrame {
 
 	private JPanel contentPane;
-	
 	private JTextArea textArea;
-	
 	private JButton btnUpdate;
 	
 	private DateTimePicker dtpStart;
