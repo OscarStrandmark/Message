@@ -6,6 +6,8 @@ import javax.swing.ImageIcon;
 
 import UI.UIHandler;
 import shared.LoginMessage;
+import shared.MediaMessage;
+import shared.Message;
 import shared.User;
 
 public class Controller {
@@ -18,6 +20,8 @@ public class Controller {
 	private List<User> connectedUsers;
 	private List<User> contacts;
 	
+	private User me;
+	
 	
 	public Controller() {
 		connection = new Connection(SERVERADDRESS, PORT);
@@ -25,13 +29,14 @@ public class Controller {
 		
 	}
 	
-	public void sendMessage() {
-		//TODO
-		connection.sendObject(null);
+	public void sendMessage(String text, ImageIcon img, List<User> recipients) {
+		Message msg = new MediaMessage(me, recipients, text, img);
+		connection.sendObject(msg);
 	}
 	
 	public void login(String username, ImageIcon img) {
-		LoginMessage msg = new LoginMessage(new User(username, img));
+		me = new User(username, img);
+		LoginMessage msg = new LoginMessage(me);
 		connection.sendObject(msg);
 	}
 	

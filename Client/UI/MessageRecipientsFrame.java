@@ -19,6 +19,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import client.Controller;
 import shared.User;
 
 public class MessageRecipientsFrame extends JFrame {
@@ -29,7 +30,7 @@ public class MessageRecipientsFrame extends JFrame {
 	private JList<User> listContacts;
 	private JList<User> listRecipients;
 
-	private UIHandler ui;
+	private Controller controller;
 	private MessageFrame msgWindow;
 	private JFrame thisWindow = this;
 	
@@ -39,8 +40,8 @@ public class MessageRecipientsFrame extends JFrame {
 	
 	private List<User> recipients;
 	
-	public MessageRecipientsFrame(UIHandler ui, MessageFrame msgWindow) {
-		this.ui = ui;
+	public MessageRecipientsFrame(Controller controller, MessageFrame msgWindow) {
+		this.controller = controller;
 		this.msgWindow = msgWindow;
 		init();
 		//TODO
@@ -118,8 +119,8 @@ public class MessageRecipientsFrame extends JFrame {
 	}
 
 	private void initLists() {
-		List<User> connected = ui.getConnected();
-		List<User> contacts  = ui.getContacts();
+		List<User> connected = controller.getConnectedUsers();
+		List<User> contacts  = controller.getContacts();
 		
 		DefaultListModel<User> modelConnected = new DefaultListModel<User>();
 		DefaultListModel<User> modelContacts  = new DefaultListModel<User>();

@@ -1,6 +1,7 @@
 package UI;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -17,24 +18,31 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
+import client.Controller;
 import shared.Message;
 import shared.User;
 
 public class MainFrame extends JFrame {
 
-	private UIHandler ui;
+	private Controller controller;
 	
 	private JPanel contentPane;
-
+	private JTextPane jtp;
+	
 	private JButton btnContacts;
 	private JButton btnNewMessage;
 	private JButton btnConnectedUsers;
 
+	private JLabel lblImage;
+	private JLabel lblName;
+	private JLabel lblTimestamp;
+	
+	
 	private MainFrame thisWindow = this;
 	
 	private JList messagesRecieved;
-	public MainFrame(UIHandler ui) {
-		this.ui = ui;
+	public MainFrame(Controller controller) {
+		this.controller = controller;
 		init();
 	}
 
@@ -69,6 +77,7 @@ public class MainFrame extends JFrame {
 		
 		// WEST
 		JScrollPane messagesRecievedPane = new JScrollPane();
+		messagesRecievedPane.setPreferredSize(new Dimension(200,650));
 		Message[] msg = {new Message(new User("txt",new ImageIcon()))};
 		messagesRecieved = new JList<Message>(msg);
 		messagesRecievedPane.add(messagesRecieved);
@@ -82,41 +91,39 @@ public class MainFrame extends JFrame {
 		centerPanel.add(northPanel, BorderLayout.NORTH);
 		northPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		JLabel lblImage = new JLabel("Image");
+		JLabel lblFrom = new JLabel("Message from user: ");
+		northPanel.add(lblFrom);
+		
+		lblImage = new JLabel("Image");
+		lblImage.setMaximumSize(new Dimension(112,113));
 		northPanel.add(lblImage);
 		
-		JLabel lblName = new JLabel("Name");
+		lblName = new JLabel("Name");
 		northPanel.add(lblName);
 		
-		JLabel lblTimestamp = new JLabel("Timestamp");
+		lblTimestamp = new JLabel("Timestamp");
 		northPanel.add(lblTimestamp);
 		centerPanel.add(northPanel,BorderLayout.NORTH);
 		
-		JTextPane jtp = new JTextPane();
+		jtp = new JTextPane();
 		centerPanel.add(jtp,BorderLayout.CENTER);
-	}
-
-	public void sendMessage() {
 		
-	}
-	
-	public void addRecipients(List<User> recipients) {
-		
+		contentPane.add(centerPanel,BorderLayout.CENTER);
 	}
 	
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 
 			if (e.getSource() == btnContacts) {
-				new ContactWindow(ui);
+				new ContactWindow(controller);
 			}
 
 			if (e.getSource() == btnNewMessage) {
-				new MessageFrame(ui);
+				new MessageFrame(controller);
 			}
 
 			if (e.getSource() == btnConnectedUsers) {
-				new ConnectedUsersWindow(ui);
+				new ConnectedUsersWindow(controller);
 			}
 		}
 	}

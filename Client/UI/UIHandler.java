@@ -27,7 +27,7 @@ public class UIHandler {
 	}
 	
 	public void showMainWindow() {
-		JFrame mainWindow = new MainFrame(this);
+		JFrame mainWindow = new MainFrame(controller);
 	}
 
 	public List<User> getConnected() {

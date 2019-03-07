@@ -9,6 +9,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+
+import client.Controller;
+
 import javax.swing.JButton;
 import java.awt.Font;
 
@@ -25,11 +28,11 @@ public class ContactWindow {
 	private JButton btnFromContacts = new JButton("----->");
 	private JButton btnFromUsers = new JButton("<-----");
 
-	private UIHandler ui;
+	private Controller controller;
 
 
-	public ContactWindow(UIHandler ui) {
-		this.ui = ui;
+	public ContactWindow(Controller controller) {
+		this.controller = controller;
 		initialize();
 	}
 

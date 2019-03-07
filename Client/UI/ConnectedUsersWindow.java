@@ -6,6 +6,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+
+import client.Controller;
+
 import javax.swing.JList;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -18,10 +21,10 @@ public class ConnectedUsersWindow {
 	private JList list = new JList();
 	private JButton btnCloseWindow = new JButton("Close Window");
 
-	private UIHandler ui;
+	private Controller controller;
 
-	public ConnectedUsersWindow(UIHandler ui) {
-		this.ui = ui;
+	public ConnectedUsersWindow(Controller controller) {
+		this.controller = controller;
 		initialize();
 	}
 

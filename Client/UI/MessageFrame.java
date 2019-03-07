@@ -15,6 +15,8 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import client.Controller;
+import shared.MediaMessage;
 import shared.User;
 
 public class MessageFrame extends JFrame {
@@ -30,7 +32,7 @@ public class MessageFrame extends JFrame {
 	private JButton btnSend;
 	
 	private MessageFrame thisWindow = this;
-	private UIHandler ui;
+	private Controller controller;
 	
 	private List<User> recipients;
 	private String MessageText;
@@ -38,8 +40,8 @@ public class MessageFrame extends JFrame {
 	
 	
 	
-	public MessageFrame(UIHandler ui) {
-		this.ui = ui;
+	public MessageFrame(Controller controller) {
+		this.controller = controller;
 		init();
 	}
 
@@ -94,11 +96,14 @@ public class MessageFrame extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			
 			if(e.getSource() == btnAddReciever) {
-				new MessageRecipientsFrame(ui,thisWindow);
+				new MessageRecipientsFrame(controller,thisWindow);
 			}
 			
 			if(e.getSource() == btnSend) {
-				setVisible(false);
+				String text = textArea.getText();
+				ImageIcon img = MessageImage;
+				controller.sendMessage(text, img, recipients);
+				dispose();
 			}
 			
 			if(e.getSource() == btnAddImage) {
