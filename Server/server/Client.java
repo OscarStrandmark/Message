@@ -25,6 +25,8 @@ public class Client {
 			oos = new ObjectOutputStream(socket.getOutputStream());
 			
 			User me = (User)ois.readObject();
+			System.out.println("Servern har läst in Userobjekt: "+me.toString()); //TEST
+
 			
 			controller.addnewUser(me,this);
 			
@@ -45,6 +47,8 @@ public class Client {
 			while(true) {
 				try {
 					msg = messageBuffer.get();
+					System.out.print("Meddelande hämtat från messageBuffer (I client clientSender)");
+
 					oos.writeObject(msg);
 					oos.flush();
 				} catch (InterruptedException e) {
@@ -58,12 +62,18 @@ public class Client {
 	
 	private class ClientReceiver extends Thread {
 		public void run() {
-			while (true) try {
+			while (true) { 
+				try {
 				Message msg;
+				System.out.println("Väntar på att läsa in objekt....");
+
 				msg = (Message) ois.readObject();
+				System.out.println("Meddelande: "+msg.toString()+" inläst från inputstream");
+
 				controller.processMessage(msg);
 			} catch ( Exception e) {
 				e.printStackTrace();
+				}
 			}
 		}
 	}
