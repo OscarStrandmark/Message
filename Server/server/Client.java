@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import shared.Buffer;
+import shared.LoginMessage;
 import shared.Message;
 import shared.User;
 
@@ -18,23 +19,22 @@ public class Client {
 	private Buffer<Message> messageBuffer;
 	
 	public Client(Controller controller,Socket socket) {
-		messageBuffer = new Buffer<Message>();
+		this.messageBuffer = new Buffer<Message>();
 		this.controller = controller;
 		this.socket = socket;
 		try {
 			ois = new ObjectInputStream(socket.getInputStream());
 			oos = new ObjectOutputStream(socket.getOutputStream());
-			
-			User me = (User)ois.readObject();
+			System.out.println("Strömmar skapade");
+			LoginMessage me = (LoginMessage)ois.readObject();
 			System.out.println("Client: Servern har lÃ¤st in Userobjekt: "+me.toString()); //TEST
 
-			
-			controller.addnewUser(me,this);
-			
 			new ClientSender().start();
 			new ClientReceiver().start();
+			
+			controller.addnewUser(me.getSender(),this);
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 	

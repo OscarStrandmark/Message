@@ -23,14 +23,13 @@ public class Connection {
 	private int port;
 	
 	public Connection(Controller controller,int port) {
-		connections = new ConcurrentHashMap<User, Client>();
+		this.connections = new ConcurrentHashMap<User, Client>();
+		this.messageBuffer = new Buffer<Message>();
+
 		this.controller = controller;
 		this.port = port;
 		new ClientAccepter().start();
-
-		this.messageBuffer = new Buffer<Message>();
-
-		
+		new SendMessageHandler().start();
 	}
 	
 	public void addConnection(User user, Client client) {
@@ -50,6 +49,7 @@ public class Connection {
 				while(true) {
 					try {
 						Socket socket = serverSocket.accept();
+						System.out.println("Client accepted");
 						new Client(controller,socket);
 					} catch (Exception e) {
 						System.err.println(e);
@@ -69,7 +69,9 @@ public class Connection {
 				try {
 					Message msg = messageBuffer.get();
 
-//					controller.logMessage(msg); finns i controller redan, beh�vs kanske inte?
+					
+					System.out.println();
+					
 					if(msg instanceof MediaMessage) {
 						List<User> receivers = ((MediaMessage) msg).getReceivers();
 						Iterator<User> receiverIter = receivers.iterator();
@@ -93,7 +95,7 @@ public class Connection {
 					}
 					
 				} catch (Exception e) {
-					System.err.println(e);
+					e.printStackTrace();
 				}
 			}
 		}

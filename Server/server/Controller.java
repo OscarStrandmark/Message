@@ -12,13 +12,9 @@ public class Controller {
 	private static final int PORT = 720;
 	private List<User> connectedUsers = new ArrayList<User>();
 	private Connection connection;
-	private Logger log;
 	
-	public Controller() {
-//		new Connection(this,PORT);
-		
+	public Controller() {		
 		connection = new Connection(this, PORT);
-//		log = new Logger(LOGFILEPATH);
 	}
 	
 	public void addnewUser(User user, Client client) {

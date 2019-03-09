@@ -61,7 +61,7 @@ public class Logger {
 		if(msg instanceof MediaMessage) {
 			MediaMessage mmsg = (MediaMessage)msg;
 			try {
-				String str = getDateFormatted() + " " + "Message was recieved from user: " + mmsg.getSender() + ", " + "to: ";
+				String str = getDateFormatted() + " " + "Message was recieved from user: " + mmsg.getSender().toLowerCase() + ", " + "to: ";
 				List<User> recipients = mmsg.getReceivers();
 				Iterator<User> iter = recipients.iterator();
 				while(iter.hasNext()) {

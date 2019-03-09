@@ -12,7 +12,7 @@ public class Message implements Serializable{
 		this.from = from;
 	}
 	
-	public String getSender() {
-		return from.getUsername();
+	public User getSender() {
+		return from;
 	}
 }
