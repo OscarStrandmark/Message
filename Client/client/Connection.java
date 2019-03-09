@@ -4,6 +4,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import shared.LoginMessage;
 import shared.MediaMessage;
 import shared.Message;
 import shared.UpdateMessage;
@@ -39,16 +40,13 @@ public class Connection {
 			socket = new Socket(address,port);
 			ois = new ObjectInputStream(socket.getInputStream());
 			oos = new ObjectOutputStream(socket.getOutputStream());
-			oos.writeObject(user);
+			oos.writeObject(new LoginMessage(user));
 			oos.flush();
 			new ServerListener();
 		} catch (Exception e) {
+			System.out.println("bajs");
 			System.err.println(e);
 		}
-	}
-	
-	public void disconnect() {
-		
 	}
 	
 	private class ServerListener extends Thread {

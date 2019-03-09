@@ -38,8 +38,7 @@ public class Controller {
 	
 	public void login(String username, ImageIcon img) {
 		me = new User(username, img);
-		LoginMessage msg = new LoginMessage(me);
-		connection.sendObject(msg);
+		connection.connect(me);
 	}
 	
 	public List<User> getConnectedUsers(){
