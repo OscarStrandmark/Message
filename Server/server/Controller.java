@@ -10,7 +10,6 @@ import shared.User;
 public class Controller {
 
 	private static final int PORT = 720;
-	private static final String LOGFILEPATH = "";
 	private List<User> connectedUsers = new ArrayList<User>();
 	private Connection connection;
 	private Logger log;

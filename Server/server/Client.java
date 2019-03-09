@@ -18,6 +18,7 @@ public class Client {
 	private Buffer<Message> messageBuffer;
 	
 	public Client(Controller controller,Socket socket) {
+		messageBuffer = new Buffer<Message>();
 		this.controller = controller;
 		this.socket = socket;
 		try {

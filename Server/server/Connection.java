@@ -23,6 +23,7 @@ public class Connection {
 	private int port;
 	
 	public Connection(Controller controller,int port) {
+		connections = new ConcurrentHashMap<User, Client>();
 		this.controller = controller;
 		this.port = port;
 		new ClientAccepter().start();
