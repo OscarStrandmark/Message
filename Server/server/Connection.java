@@ -26,13 +26,9 @@ public class Connection {
 		this.controller = controller;
 		this.port = port;
 		new ClientAccepter().start();
-//		User user = new User("Hej");
-//		Message mes = new Message(user);
-//		sendMessage(mes);
+
 		this.messageBuffer = new Buffer<Message>();
-//		User userT = new User("Hej",null);
-//		Message msg = new Message(userT);
-//		sendMessage(msg);
+
 		
 	}
 	
@@ -43,7 +39,6 @@ public class Connection {
 	public void sendMessage(Message msg) {
 		messageBuffer.put(msg);
 		System.out.println("Meddelandet lagt på buffert i connection: SendMessageHandler startas");
-		new SendMessageHandler().start();
 	}
 	
 

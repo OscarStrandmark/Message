@@ -44,7 +44,7 @@ public class ServerTest implements Serializable{
 				{
 				
 				//----------------NY ANVÄNDARE
-				System.out.println("Skriver till server...");
+				System.out.println("ServerTest:   /nSkriver till server...");
 				oos.writeObject(user);
 				System.out.println("Skrivit: "+user.toString()+" till server");
 				
