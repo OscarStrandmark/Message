@@ -1,5 +1,6 @@
 package client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -19,13 +20,14 @@ public class Controller {
 	private Connection connection;
 	private List<User> connectedUsers;
 	private List<User> contacts;
-	
+	private ArrayList<MediaMessage> messages;
 	private User me;
 	
 	
 	public Controller() {
-		connection = new Connection(SERVERADDRESS, PORT);
+		connection = new Connection(SERVERADDRESS, PORT, this);
 		ui = new UIHandler(this);
+		messages = new ArrayList<MediaMessage>();
 		
 	}
 	
@@ -49,5 +51,13 @@ public class Controller {
 	
 	public void setContacts(List<User> list) {
 		this.contacts = list;
+	}
+
+	public void updateConnectedList(List<User> list) {
+		connectedUsers = list;
+	}
+
+	public void incomingMessage(Message msg) {
+		messages.add((MediaMessage) msg);
 	}
 }
