@@ -15,19 +15,21 @@ public class MediaMessage extends Message {
 	
 	private Date received;
 	private Date delivered;
+	private Date sent;
 
 	public MediaMessage(User from, List<User> to, String text, ImageIcon image) {
 		super(from);
 		this.to = to;
 		this.text = text;
 		this.image = image;
+		this.sent = new Date();
 	}
 
 	public List<User> getReceivers() {
 		return to;
 	}
 	
-	public String getSender() {
+	public User getSender() {
 		return super.getSender();
 	}
 
@@ -55,5 +57,7 @@ public class MediaMessage extends Message {
 		return delivered;
 	}
 	
-	
+	public Date getSent() {
+		return sent;
+	}
 }

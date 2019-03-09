@@ -6,8 +6,12 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,6 +23,7 @@ import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
 import client.Controller;
+import shared.MediaMessage;
 import shared.Message;
 import shared.User;
 
@@ -37,11 +42,14 @@ public class MainFrame extends JFrame {
 	private JLabel lblName;
 	private JLabel lblTimestamp;
 	
-	
 	private MainFrame thisWindow = this;
 	
-	private JList messagesRecieved;
+	private JList<String> messagesRecieved;
+	private HashMap<String,MediaMessage> messageMap;
+	
 	public MainFrame(Controller controller) {
+		this.messageMap = new HashMap<String,MediaMessage>();
+		
 		this.controller = controller;
 		init();
 	}
@@ -78,8 +86,7 @@ public class MainFrame extends JFrame {
 		// WEST
 		JScrollPane messagesRecievedPane = new JScrollPane();
 		messagesRecievedPane.setPreferredSize(new Dimension(200,650));
-		Message[] msg = {new Message(new User("txt",new ImageIcon()))};
-		messagesRecieved = new JList<Message>(msg);
+		messagesRecieved = new JList<String>();
 		messagesRecievedPane.add(messagesRecieved);
 		contentPane.add(messagesRecievedPane,BorderLayout.WEST);
 		
@@ -109,6 +116,21 @@ public class MainFrame extends JFrame {
 		centerPanel.add(jtp,BorderLayout.CENTER);
 		
 		contentPane.add(centerPanel,BorderLayout.CENTER);
+	}
+	
+	public void updateMessageList(ArrayList<MediaMessage> messageList) {
+		messageMap.clear();		
+		DefaultListModel<String> model = new DefaultListModel<String>();
+		for(MediaMessage msg : messageList) {
+			Date time = msg.getSent();
+			String key = msg.getSender().getUsername() + " - " + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+			
+			messageMap.put(key, msg);
+			model.addElement(key);
+		}
+		
+		messagesRecieved = new JList<String>(model);
+		messagesRecieved.updateUI();
 	}
 	
 	private class ButtonListener implements ActionListener {

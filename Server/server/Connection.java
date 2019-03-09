@@ -2,6 +2,8 @@ package server;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +18,7 @@ import shared.User;
 public class Connection {
 
 	private Controller controller;
-	
+	private HashMap<User,ArrayList<Message>> unsentMessages;
 	private ConcurrentHashMap<User, Client> connections;
 	private Buffer<Message> messageBuffer;
 	
@@ -25,7 +27,7 @@ public class Connection {
 	public Connection(Controller controller,int port) {
 		this.connections = new ConcurrentHashMap<User, Client>();
 		this.messageBuffer = new Buffer<Message>();
-
+		this.unsentMessages = new HashMap<User,ArrayList<Message>>();
 		this.controller = controller;
 		this.port = port;
 		new ClientAccepter().start();
@@ -76,9 +78,16 @@ public class Connection {
 						List<User> receivers = ((MediaMessage) msg).getReceivers();
 						Iterator<User> receiverIter = receivers.iterator();
 						while(receiverIter.hasNext()) {
-							Object user = receiverIter.next();
-							Client client = connections.get(user);
-							client.sendTo(msg);
+							User user = receiverIter.next();
+							if(connections.containsKey(user)) {
+								Client client = connections.get(user);
+								client.sendTo(msg);
+							} else {
+								ArrayList<Message> messages = new ArrayList<Message>();
+								messages.add(msg);
+								unsentMessages.put(user, messages);
+							}
+							System.out.println();
 						}
 					} 
 					

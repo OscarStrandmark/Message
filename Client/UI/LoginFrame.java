@@ -92,6 +92,7 @@ public class LoginFrame extends JFrame {
 				if (txtUsername.getText().length() <= 0) {
 					JOptionPane.showMessageDialog(null, "Username must be longer", "ERROR", JOptionPane.ERROR_MESSAGE);
 				} else {
+					username = txtUsername.getText();
 					uiHandler.logIn(username, avatar);
 					uiHandler.showMainWindow();
 					dispose();

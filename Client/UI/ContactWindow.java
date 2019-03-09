@@ -84,8 +84,9 @@ public class ContactWindow {
 			}
 
 			if (e.getSource() == btnFromContacts) {
-
+				
 			}
+			
 			if(e.getSource() == btnFromUsers) {
 
 			}

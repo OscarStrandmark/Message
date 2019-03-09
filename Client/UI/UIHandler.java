@@ -12,6 +12,7 @@ public class UIHandler {
 
 	private Controller controller;
 	private List<User> userList;
+	private MainFrame mainWindow;
 	
 	public UIHandler(Controller controller) {
 		this.controller = controller;
@@ -27,7 +28,7 @@ public class UIHandler {
 	}
 	
 	public void showMainWindow() {
-		JFrame mainWindow = new MainFrame(controller);
+		mainWindow = new MainFrame(controller);
 	}
 
 	public List<User> getConnected() {
@@ -37,4 +38,9 @@ public class UIHandler {
 	public List<User> getContacts() {
 		return controller.getContacts();
 	}
+
+	public void incomingMessage() {
+		mainWindow.updateMessageList(controller.getMessageList());
+	}
+
 }
