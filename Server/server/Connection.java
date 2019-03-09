@@ -26,17 +26,22 @@ public class Connection {
 		this.controller = controller;
 		this.port = port;
 		new ClientAccepter().start();
-		new SendMessageHandler().start();
+
+		this.messageBuffer = new Buffer<Message>();
+
+		
 	}
 	
 	public void addConnection(User user, Client client) {
 		connections.put(user, client);
 	}
 	
-	public void sendMessage(UpdateMessage msg) {
+	public void sendMessage(Message msg) {
 		messageBuffer.put(msg);
+		System.out.println("Meddelandet lagt på buffert i connection: SendMessageHandler startas");
 	}
 	
+
 	private class ClientAccepter extends Thread {
 		public void run() {
 			try (ServerSocket serverSocket = new ServerSocket(port)){
@@ -58,11 +63,12 @@ public class Connection {
 
 	private class SendMessageHandler extends Thread {
 		public void run() {
-			Message msg = null;
+//			Message msg = null;
 			while(true) {
 				try {
-					msg = messageBuffer.get();
-					controller.logMessage(msg);
+					Message msg = messageBuffer.get();
+
+//					controller.logMessage(msg); finns i controller redan, beh�vs kanske inte?
 					if(msg instanceof MediaMessage) {
 						List<User> receivers = ((MediaMessage) msg).getReceivers();
 						Iterator<User> receiverIter = receivers.iterator();

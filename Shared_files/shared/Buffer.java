@@ -10,6 +10,7 @@ public class Buffer<T> {
 		notifyAll();
 	}
 	
+	
 	public synchronized T get() throws InterruptedException {
 		while(buffer.isEmpty()) {
 			wait();
