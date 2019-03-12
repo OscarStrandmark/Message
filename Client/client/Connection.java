@@ -60,6 +60,7 @@ public class Connection {
 					oos.writeObject(msg);
 					oos.flush();
 				} catch (Exception e) {
+					Thread.currentThread().interrupt();
 					e.printStackTrace();
 				}
 			}
@@ -90,6 +91,7 @@ public class Connection {
 					}
 					
 				} catch (Exception e) {
+					Thread.currentThread().interrupt();
 					e.printStackTrace();
 				}
 			}

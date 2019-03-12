@@ -41,6 +41,7 @@ public class Controller {
 	public Controller() {
 		connectedUsers = new ArrayList<User>();
 		connection = new Connection(SERVERADDRESS, PORT, this);
+		contacts = new ArrayList<User>();
 		ui = new UIHandler(this);
 		messages = new ArrayList<MediaMessage>();
 		readContactsFromFile();
