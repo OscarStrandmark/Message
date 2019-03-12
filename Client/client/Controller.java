@@ -1,6 +1,9 @@
 package client;
 
 import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.EOFException;
@@ -31,6 +34,8 @@ public class Controller {
 	private User me;
 
 	private static final String FILEPATH_CONTACTS = "C:\\dev\\ServerLogFile\\contacts.dat";
+	private static final String FILEPATH_CONTACTS_FOLDER = "C:\\dev\\ServerLogFile";
+
 	private ArrayList<User> contacts;
 
 	public Controller() {
@@ -42,24 +47,28 @@ public class Controller {
 	}
 
 	private void readContactsFromFile() {
-		File file = new File(FILEPATH_CONTACTS);
-		if (file.exists()) {
-			try (ObjectInputStream ois = new ObjectInputStream(
-					new BufferedInputStream(new FileInputStream(FILEPATH_CONTACTS)))) {
+		File folders = new File(FILEPATH_CONTACTS_FOLDER);
+		if (!folders.exists()) {
+			folders.mkdirs();
+		}
 
+		File contact = new File(FILEPATH_CONTACTS);
+
+		if (contact.isFile()) {
+			try {
+				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(contact));
 				while (true) {
 					User u = (User) ois.readObject();
 					contacts.add(u);
 				}
-			} catch (EOFException e) {
-				// EOFException is always throwns after all objects are read.
-			} catch (Exception e2) {
-				e2.printStackTrace();
+			} catch (EOFException EOFE) {
+				// Exception is thrown and caught here when all user objects are read.
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		} else {
-			file.mkdirs();
+			System.out.println("contacts file did not exist");
 		}
-
 	}
 
 	/**
