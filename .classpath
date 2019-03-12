@@ -9,5 +9,6 @@
 	<classpathentry kind="src" path="Server"/>
 	<classpathentry kind="src" path="Shared_files"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/LGoodDatePicker"/>
+	<classpathentry kind="lib" path="Library/LGoodDatePicker-10.4.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

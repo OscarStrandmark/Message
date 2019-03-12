@@ -9,6 +9,7 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.JList;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -109,8 +110,12 @@ public class ContactWindow {
 			connectedString.add(u.getUsername());
 		}
 
-		listUsers = new JList<String>((String[]) contactString.toArray());
+		listUsers = new JList<String>((String[]) connectedString.toArray());
 		listContacts = new JList<String>((String[]) contactString.toArray());
+		listUsers.setVisibleRowCount(connectedString.size());
+		listContacts.setVisibleRowCount(contactString.size());
+		listUsers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listContacts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listUsers.updateUI();
 		listContacts.updateUI();
 	}
@@ -160,8 +165,12 @@ public class ContactWindow {
 				contactString.remove(selectedUser);
 				connectedString.add(selectedUser);
 
-				listUsers = new JList<String>((String[]) contactString.toArray());
+				listUsers = new JList<String>((String[]) connectedString.toArray());
 				listContacts = new JList<String>((String[]) contactString.toArray());
+				listUsers.setVisibleRowCount(connectedString.size());
+				listContacts.setVisibleRowCount(contactString.size());
+				listUsers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				listContacts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				listUsers.updateUI();
 				listContacts.updateUI();
 			}
@@ -196,8 +205,12 @@ public class ContactWindow {
 				contactString.add(selectedUser);
 				connectedString.remove(selectedUser);
 
-				listUsers = new JList<String>((String[]) contactString.toArray());
+				listUsers = new JList<String>((String[]) connectedString.toArray());
 				listContacts = new JList<String>((String[]) contactString.toArray());
+				listUsers.setVisibleRowCount(connectedString.size());
+				listContacts.setVisibleRowCount(contactString.size());
+				listUsers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				listContacts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				listUsers.updateUI();
 				listContacts.updateUI();
 			}
