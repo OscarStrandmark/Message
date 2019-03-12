@@ -17,6 +17,7 @@ import javax.swing.SwingConstants;
 import client.Controller;
 import shared.User;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.Font;
 
@@ -30,12 +31,12 @@ public class ContactWindow {
 	private JLabel lblKontakter = new JLabel("Contacts");
 
 	private JLabel lblAnslutnaAnvndare = new JLabel("Connected Users");
-	private JList<String> listUsers = new JList<String>();
+	private JList<String> listConnected = new JList<String>();
 
 	private HashMap<String, User> userMap;
 
 	private JButton btnFromContacts = new JButton("----->");
-	private JButton btnFromUsers = new JButton("<-----");
+	private JButton btnFromConnected = new JButton("<-----");
 	private JButton btnClose = new JButton("Save and Close");
 
 	private Controller controller;
@@ -72,7 +73,7 @@ public class ContactWindow {
 		btnClose.addActionListener(listener);
 		frame.getContentPane().add(scrollPane_1);
 
-		scrollPane_1.setViewportView(listUsers);
+		scrollPane_1.setViewportView(listConnected);
 		lblAnslutnaAnvndare.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblAnslutnaAnvndare.setBounds(572, 47, 207, 20);
 		frame.getContentPane().add(lblAnslutnaAnvndare);
@@ -81,43 +82,34 @@ public class ContactWindow {
 		btnFromContacts.setBounds(339, 197, 115, 29);
 		frame.getContentPane().add(btnFromContacts);
 
-		btnFromUsers.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnFromUsers.setBounds(339, 272, 115, 29);
-		frame.getContentPane().add(btnFromUsers);
+		btnFromConnected.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnFromConnected.setBounds(339, 272, 115, 29);
+		frame.getContentPane().add(btnFromConnected);
 	}
 
 	private void initializeLists() {
-		ArrayList<User> contacts = controller.getContacts();
 		ArrayList<User> connected = controller.getConnectedUsers();
+		ArrayList<User> contacts = controller.getContacts();
+		DefaultListModel<String> modelConnected = new DefaultListModel<String>();
+		DefaultListModel<String> modelContacts = new DefaultListModel<String>();
 
-		userMap = new HashMap<String, User>();
-
-		for (User u : contacts) {
-			if (connected.contains(u)) {
-				connected.remove(u);
-			}
-		}
-		ArrayList<String> contactString = new ArrayList<String>();
-		ArrayList<String> connectedString = new ArrayList<String>();
-
-		for (User u : contacts) {
+		userMap = new HashMap<String,User>();
+		
+		for(User u : contacts) {
+			connected.remove(u);
 			userMap.put(u.getUsername(), u);
-			contactString.add(u.getUsername());
+			modelContacts.addElement(u.getUsername());
+		}
+		
+		for(User u : connected) {
+			userMap.put(u.getUsername(),u);
+			modelConnected.addElement(u.getUsername());
 		}
 
-		for (User u : connected) {
-			userMap.put(u.getUsername(), u);
-			connectedString.add(u.getUsername());
-		}
-
-		listUsers = new JList<String>((String[]) connectedString.toArray());
-		listContacts = new JList<String>((String[]) contactString.toArray());
-		listUsers.setVisibleRowCount(connectedString.size());
-		listContacts.setVisibleRowCount(contactString.size());
-		listUsers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listConnected.setModel(modelConnected);
+		listConnected.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
+		listContacts.setModel(modelContacts);
 		listContacts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listUsers.updateUI();
-		listContacts.updateUI();
 	}
 
 	private class Listener implements ActionListener {
@@ -136,83 +128,29 @@ public class ContactWindow {
 			}
 
 			if (e.getSource() == btnFromContacts) {
-				int selectedIndex = listContacts.getSelectedIndex();
-				String selectedUser = listContacts.getModel().getElementAt(selectedIndex);
-
-				ArrayList<User> contacts = controller.getContacts();
-				ArrayList<User> connected = controller.getConnectedUsers();
-
-				userMap = new HashMap<String, User>();
-
-				for (User u : contacts) {
-					if (connected.contains(u)) {
-						connected.remove(u);
-					}
-				}
-				ArrayList<String> contactString = new ArrayList<String>();
-				ArrayList<String> connectedString = new ArrayList<String>();
-
-				for (User u : contacts) {
-					userMap.put(u.getUsername(), u);
-					contactString.add(u.getUsername());
-				}
-
-				for (User u : connected) {
-					userMap.put(u.getUsername(), u);
-					connectedString.add(u.getUsername());
-				}
-
-				contactString.remove(selectedUser);
-				connectedString.add(selectedUser);
-
-				listUsers = new JList<String>((String[]) connectedString.toArray());
-				listContacts = new JList<String>((String[]) contactString.toArray());
-				listUsers.setVisibleRowCount(connectedString.size());
-				listContacts.setVisibleRowCount(contactString.size());
-				listUsers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				listContacts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				listUsers.updateUI();
-				listContacts.updateUI();
+				
 			}
 
-			if (e.getSource() == btnFromUsers) {
-				int selectedIndex = listUsers.getSelectedIndex();
-				String selectedUser = listUsers.getModel().getElementAt(selectedIndex);
-
-				ArrayList<User> contacts = controller.getContacts();
-				ArrayList<User> connected = controller.getConnectedUsers();
-
-				userMap = new HashMap<String, User>();
-
-				for (User u : contacts) {
-					if (connected.contains(u)) {
-						connected.remove(u);
+			if (e.getSource() == btnFromConnected) {
+				
+				int i = listConnected.getSelectedIndex();
+				
+				ListModel<String> oldModelConnected = listConnected.getModel();
+				DefaultListModel<String> newModelConnected = new DefaultListModel<String>();
+				for (int j = 0; j < oldModelConnected.getSize(); j++) {
+					if(j != i) {
+						newModelConnected.addElement(oldModelConnected.getElementAt(j));
 					}
 				}
-				ArrayList<String> contactString = new ArrayList<String>();
-				ArrayList<String> connectedString = new ArrayList<String>();
-
-				for (User u : contacts) {
-					userMap.put(u.getUsername(), u);
-					contactString.add(u.getUsername());
+				ListModel<String> oldModelContacts = listContacts.getModel();
+				DefaultListModel<String> newModelContacts = new DefaultListModel<String>();
+				newModelContacts.addElement(oldModelConnected.getElementAt(i));
+				for (int j = 0; j < oldModelContacts.getSize(); j++) {
+					newModelContacts.addElement(oldModelContacts.getElementAt(j));
 				}
-
-				for (User u : connected) {
-					userMap.put(u.getUsername(), u);
-					connectedString.add(u.getUsername());
-				}
-
-				contactString.add(selectedUser);
-				connectedString.remove(selectedUser);
-
-				listUsers = new JList<String>((String[]) connectedString.toArray());
-				listContacts = new JList<String>((String[]) contactString.toArray());
-				listUsers.setVisibleRowCount(connectedString.size());
-				listContacts.setVisibleRowCount(contactString.size());
-				listUsers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				listContacts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				listUsers.updateUI();
-				listContacts.updateUI();
+				
+				listConnected.setModel(newModelConnected);
+				listContacts.setModel(newModelContacts);
 			}
 		}
 	}
