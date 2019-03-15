@@ -3,6 +3,7 @@ package UI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -87,8 +88,14 @@ public class MessageFrame extends JFrame {
 		contentPane.add(btnAddImage);
 	}
 	
-	public void setRecipients(List<User> recipients) {
+	public void setRecipients(ArrayList<User> recipients) {
 		this.recipients = recipients;
+		String users = "";
+		for (int i = 0; i < recipients.size(); i++) {
+			users += recipients.get(i).getUsername() + ", ";
+		}
+		users = users.substring(0, users.length()-2);
+		textRecipients.setText(users);
 	}
 
 	private class ButtonListener implements ActionListener {

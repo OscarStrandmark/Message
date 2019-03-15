@@ -177,6 +177,14 @@ public class MessageRecipientsFrame extends JFrame {
 
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == btnDone) {
+				recipients.clear();
+				
+				ListModel<String> model = listRecipients.getModel();
+				
+				for (int i = 0; i < model.getSize(); i++) {
+					User u = userMap.get(model.getElementAt(i));
+					recipients.add(u);
+				}
 				msgWindow.setRecipients(recipients);
 				thisWindow.dispose();
 			}
