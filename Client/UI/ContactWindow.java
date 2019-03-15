@@ -80,11 +80,14 @@ public class ContactWindow {
 
 		btnFromContacts.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnFromContacts.setBounds(339, 197, 115, 29);
+		btnFromContacts.addActionListener(listener);
 		frame.getContentPane().add(btnFromContacts);
 
 		btnFromConnected.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnFromConnected.setBounds(339, 272, 115, 29);
+		btnFromConnected.addActionListener(listener);
 		frame.getContentPane().add(btnFromConnected);
+		
 	}
 
 	private void initializeLists() {
@@ -117,40 +120,71 @@ public class ContactWindow {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == btnClose) {
+				
 				ListModel<String> model = listContacts.getModel();
 				ArrayList<User> newContacts = new ArrayList<User>();
+				
 				for (int i = 0; i < model.getSize(); i++) {
 					String username = model.getElementAt(i);
 					newContacts.add(userMap.get(username));
 				}
-				controller.setContacts(newContacts);
+				
+				controller.writeContacts(newContacts);
 				frame.dispose();
 			}
 
 			if (e.getSource() == btnFromContacts) {
 				
-			}
-
-			if (e.getSource() == btnFromConnected) {
-				
-				int i = listConnected.getSelectedIndex();
+				int index = listContacts.getSelectedIndex();
 				
 				ListModel<String> oldModelConnected = listConnected.getModel();
 				DefaultListModel<String> newModelConnected = new DefaultListModel<String>();
-				for (int j = 0; j < oldModelConnected.getSize(); j++) {
-					if(j != i) {
-						newModelConnected.addElement(oldModelConnected.getElementAt(j));
-					}
-				}
+			
 				ListModel<String> oldModelContacts = listContacts.getModel();
 				DefaultListModel<String> newModelContacts = new DefaultListModel<String>();
-				newModelContacts.addElement(oldModelConnected.getElementAt(i));
-				for (int j = 0; j < oldModelContacts.getSize(); j++) {
-					newModelContacts.addElement(oldModelContacts.getElementAt(j));
+				
+				for (int i = 0; i < oldModelConnected.getSize(); i++) {
+					newModelConnected.addElement(oldModelConnected.getElementAt(i));
+				}
+				newModelConnected.addElement(oldModelContacts.getElementAt(index));
+				
+				for (int i = 0; i < oldModelContacts.getSize(); i++) {
+					if(i != index) {
+						newModelContacts.addElement(oldModelContacts.getElementAt(i));
+					}
 				}
 				
 				listConnected.setModel(newModelConnected);
 				listContacts.setModel(newModelContacts);
+				
+			}
+
+			if (e.getSource() == btnFromConnected) {
+				
+				int index = listConnected.getSelectedIndex();
+				
+				ListModel<String> oldModelConnected = listConnected.getModel();
+				DefaultListModel<String> newModelConnected = new DefaultListModel<String>();
+			
+				ListModel<String> oldModelContacts = listContacts.getModel();
+				DefaultListModel<String> newModelContacts = new DefaultListModel<String>();
+				
+				
+				for (int i = 0; i < oldModelContacts.getSize(); i++) {
+					newModelContacts.addElement(oldModelContacts.getElementAt(i));
+				}
+				
+				newModelContacts.addElement(oldModelConnected.getElementAt(index));
+				
+				for (int i = 0; i < oldModelConnected.getSize(); i++) {
+					if(i != index) {
+						newModelConnected.addElement(oldModelConnected.getElementAt(i));
+					}
+				}
+				
+				listConnected.setModel(newModelConnected);
+				listContacts.setModel(newModelContacts);
+				
 			}
 		}
 	}

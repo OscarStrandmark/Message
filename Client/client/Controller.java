@@ -89,8 +89,7 @@ public class Controller {
 		oldContacts.delete();
 
 		try {
-			ObjectOutputStream oos = new ObjectOutputStream(
-					new BufferedOutputStream(new FileOutputStream(FILEPATH_CONTACTS)));
+			ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(FILEPATH_CONTACTS)));
 			for (User u : users) {
 				oos.writeObject(u);
 			}
@@ -117,10 +116,6 @@ public class Controller {
 
 	public ArrayList<User> getContacts() {
 		return contacts;
-	}
-
-	public void setContacts(List<User> list) {
-		// TODO
 	}
 
 	public void updateConnectedList(List<User> list) {
