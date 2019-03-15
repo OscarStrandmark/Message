@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentHashMap.KeySetView;
 
 import shared.Buffer;
+import shared.DisconnectMessage;
 import shared.MediaMessage;
 import shared.Message;
 import shared.UpdateMessage;
@@ -40,7 +41,6 @@ public class Connection {
 	
 	public void sendMessage(Message msg) {
 		messageBuffer.put(msg);
-		System.out.println("Meddelandet lagt på buffert i connection: SendMessageHandler startas");
 	}
 	
 
@@ -66,7 +66,6 @@ public class Connection {
 
 	private class SendMessageHandler extends Thread {
 		public void run() {
-//			Message msg = null;
 			while(true) {
 				try {
 					Message msg = messageBuffer.get();
@@ -101,6 +100,15 @@ public class Connection {
 							Client client = connections.get(key);
 							client.sendTo(msg);
 						}
+					}
+					
+					else
+					
+					if(msg instanceof DisconnectMessage) {
+						User u = msg.getSender();
+						connections.get(u).kill();
+						connections.remove(u);
+						controller.removeUser(u);
 					}
 					
 				} catch (Exception e) {

@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -59,6 +61,7 @@ public class MainFrame extends JFrame {
 		setBounds(100, 100, 1000, 700);
 		setResizable(false);
 		setVisible(true);
+		addWindowListener(new wListener());
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -132,7 +135,32 @@ public class MainFrame extends JFrame {
 		messagesRecieved = new JList<String>(model);
 		messagesRecieved.updateUI();
 	}
-	
+	private class wListener implements WindowListener {
+
+		@Override
+		public void windowActivated(WindowEvent arg0) {}
+
+		@Override
+		public void windowClosed(WindowEvent arg0) {}
+
+		@Override
+		public void windowClosing(WindowEvent arg0) {
+			controller.disconnect();
+		}
+
+		@Override
+		public void windowDeactivated(WindowEvent arg0) {}
+
+		@Override
+		public void windowDeiconified(WindowEvent arg0) {}
+
+		@Override
+		public void windowIconified(WindowEvent arg0) {}
+
+		@Override
+		public void windowOpened(WindowEvent arg0) {}
+		
+	}
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 

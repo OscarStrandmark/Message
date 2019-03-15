@@ -31,7 +31,7 @@ public class Controller {
 	private Connection connection;
 	private ArrayList<User> connectedUsers;
 	private ArrayList<MediaMessage> messages;
-	private User me;
+	public User me;
 
 	private static final String FILEPATH_CONTACTS = "C:\\dev\\ServerLogFile\\contacts.dat";
 	private static final String FILEPATH_CONTACTS_FOLDER = "C:\\dev\\ServerLogFile";
@@ -110,6 +110,9 @@ public class Controller {
 		connection.connect(me);
 	}
 
+	public void disconnect() {
+		connection.disconnect(me);
+	}
 	public ArrayList<User> getConnectedUsers() {
 		return connectedUsers;
 	}

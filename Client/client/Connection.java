@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import shared.Buffer;
+import shared.DisconnectMessage;
 import shared.LoginMessage;
 import shared.MediaMessage;
 import shared.Message;
@@ -24,6 +25,9 @@ public class Connection {
 	private String address;
 	private int port;
 	
+	private Thread sender;
+	private Thread listener;
+	
 	public Connection(String address, int port, Controller controller) {
 		messageBuffer = new Buffer<Message>();
 		this.controller = controller;
@@ -38,13 +42,21 @@ public class Connection {
 	public void connect(User user) {
 		try {
 			socket = new Socket(address,port);
-			new ServerSender().start();
-			new ServerListener().start();
+			sender = new ServerSender();
+			listener = new ServerListener();
+			sender.start();
+			listener.start();
 			messageBuffer.put(new LoginMessage(user));
 		} catch (Exception e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "No server found");
 		}
+	}
+	
+	public void disconnect(User me) {
+		messageBuffer.put(new DisconnectMessage(me));
+		listener.interrupt();
+		sender.interrupt();
 	}
 	
 	private class ServerSender extends Thread {

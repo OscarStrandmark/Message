@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 import shared.Buffer;
 import shared.LoginMessage;
 import shared.Message;
-import shared.User;
 
 public class Client {
 
@@ -18,6 +18,11 @@ public class Client {
 	private ObjectOutputStream oos;
 	private Buffer<Message> messageBuffer;
 
+	private Thread sender;
+	private Thread reciever;
+	
+	private boolean alive = true;
+	
 	public Client(Controller controller, Socket socket) {
 		this.messageBuffer = new Buffer<Message>();
 		this.controller = controller;
@@ -25,9 +30,7 @@ public class Client {
 		try {
 			ois = new ObjectInputStream(socket.getInputStream());
 			oos = new ObjectOutputStream(socket.getOutputStream());
-			System.out.println("Str�mmar skapade");
 			LoginMessage me = (LoginMessage) ois.readObject();
-			System.out.println("Client: Servern har läst in Userobjekt: " + me.toString()); // TEST
 
 			new ClientSender().start();
 			new ClientReceiver().start();
@@ -42,14 +45,24 @@ public class Client {
 		messageBuffer.put(msg);
 	}
 
+	public void kill() {
+		try {
+			System.out.println("kill");
+			socket.close();
+			alive = false;
+		} catch (SocketException sE) {
+			//SocketException will happen when socket is closed.
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private class ClientSender extends Thread {
 		public void run() {
 			Message msg;
-			while (true) {
+			while (alive) {
 				try {
 					msg = messageBuffer.get();
-					System.out.print("Client: ClientSender: Meddelande hämtat från messageBuffer...");
-
 					oos.writeObject(msg);
 					oos.flush();
 				} catch (Exception e) {
@@ -62,15 +75,10 @@ public class Client {
 
 	private class ClientReceiver extends Thread {
 		public void run() {
-			while (true) {
+			while (alive) {
 				try {
 					Message msg;
-					System.out.println("Client: ClientReciever: Väntar på att läsa in objekt....");
-
 					msg = (Message) ois.readObject();
-					System.out.println(
-							"Client: ClientReciever: Meddelande: " + msg.toString() + " inläst från inputstream");
-
 					controller.processMessage(msg);
 				} catch (Exception e) {
 					Thread.currentThread().interrupt();
