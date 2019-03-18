@@ -3,6 +3,7 @@ package UI;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,9 +23,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.BadLocationException;
 
 import client.Controller;
 import shared.MediaMessage;
@@ -42,13 +46,12 @@ public class MainFrame extends JFrame {
 	private JButton btnNewMessage;
 	private JButton btnConnectedUsers;
 
-	private JLabel lblImage;
 	private JLabel lblName;
 	private JLabel lblTimestamp;
 	
 	private MainFrame thisWindow = this;
 	
-	private JList<String> messagesRecieved;
+	private JList<String> messagesRecievedList;
 	private ArrayList<String> messageStrings;
 	private HashMap<String,MediaMessage> messageMap;
 	
@@ -92,9 +95,10 @@ public class MainFrame extends JFrame {
 		// WEST
 		JScrollPane messagesRecievedPane = new JScrollPane();
 		messagesRecievedPane.setPreferredSize(new Dimension(200,650));
-		messagesRecieved = new JList<String>();
-		messagesRecievedPane.setViewportView(messagesRecieved);
-		messagesRecieved.addListSelectionListener(new ListListener());
+		messagesRecievedList = new JList<String>();
+		messagesRecievedList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		messagesRecievedPane.setViewportView(messagesRecievedList);
+		messagesRecievedList.addListSelectionListener(new ListListener());
 		contentPane.add(messagesRecievedPane,BorderLayout.WEST);
 		
 		//CENTER
@@ -108,10 +112,6 @@ public class MainFrame extends JFrame {
 		JLabel lblFrom = new JLabel("Message from user: ");
 		northPanel.add(lblFrom);
 		
-		lblImage = new JLabel("Image");
-		lblImage.setMaximumSize(new Dimension(112,113));
-		northPanel.add(lblImage);
-		
 		lblName = new JLabel("Name");
 		northPanel.add(lblName);
 		
@@ -120,6 +120,8 @@ public class MainFrame extends JFrame {
 		centerPanel.add(northPanel,BorderLayout.NORTH);
 		
 		jtp = new JTextPane();
+		jtp.setFont(new Font("Arial bold",Font.PLAIN,24));
+		jtp.setEditable(false);
 		centerPanel.add(jtp,BorderLayout.CENTER);
 		
 		contentPane.add(centerPanel,BorderLayout.CENTER);
@@ -128,7 +130,6 @@ public class MainFrame extends JFrame {
 	public void updateMessageList(ArrayList<MediaMessage> messages) {
 		messageMap.clear();
 		messageStrings.clear();
-		
 		
 		for(MediaMessage m : messages) {
 			String s = m.getSender().getUsername() + " - " + m.getSent().getHours() + ":" + m.getSent().getMinutes() + ":" + m.getSent().getSeconds();
@@ -142,38 +143,50 @@ public class MainFrame extends JFrame {
 			model.addElement(s);
 		}
 		
-		messagesRecieved.setModel(model);
+		messagesRecievedList.setModel(model);
 	}
 	
 	private class ListListener implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
+			jtp.setText(null);
+			
+			int index = messagesRecievedList.getSelectedIndex();
+			
+			ListModel<String> model = messagesRecievedList.getModel();
+			
+			MediaMessage msg = messageMap.get(model.getElementAt(index));
+			
+			lblName.setText(msg.getSender().getUsername());
+			String timestamp = msg.getSent().toString();
+			lblTimestamp.setText(timestamp);
+			
+			ImageIcon img = msg.getImage();
+
+			if(img != null) {
+				jtp.insertIcon(img);
+
+			}
+			
+			try {
+				jtp.getDocument().insertString(0, msg.getText() + "\n", null);
+			} catch (BadLocationException BLE) {
+				BLE.printStackTrace();
+			}
 			
 		}
 	}
 	private class wListener implements WindowListener {
 
-		@Override
 		public void windowActivated(WindowEvent arg0) {}
-
-		@Override
 		public void windowClosed(WindowEvent arg0) {}
-
-		@Override
 		public void windowClosing(WindowEvent arg0) {
 			controller.disconnect();
 		}
 
-		@Override
 		public void windowDeactivated(WindowEvent arg0) {}
-
-		@Override
 		public void windowDeiconified(WindowEvent arg0) {}
-
-		@Override
 		public void windowIconified(WindowEvent arg0) {}
-
-		@Override
 		public void windowOpened(WindowEvent arg0) {}
 		
 	}
