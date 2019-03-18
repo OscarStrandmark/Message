@@ -1,5 +1,6 @@
 package client;
 
+import java.io.EOFException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -25,6 +26,8 @@ public class Connection {
 	private String address;
 	private int port;
 	
+	boolean alive;
+	
 	private Thread sender;
 	private Thread listener;
 	
@@ -41,6 +44,7 @@ public class Connection {
 	
 	public void connect(User user) {
 		try {
+			this.alive = true;
 			socket = new Socket(address,port);
 			sender = new ServerSender();
 			listener = new ServerListener();
@@ -54,6 +58,7 @@ public class Connection {
 	}
 	
 	public void disconnect(User me) {
+		alive = false;
 		messageBuffer.put(new DisconnectMessage(me));
 		listener.interrupt();
 		sender.interrupt();
@@ -66,7 +71,7 @@ public class Connection {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			while(true) {
+			while(alive) {
 				try {
 					Message msg = messageBuffer.get();
 					oos.writeObject(msg);
@@ -86,7 +91,7 @@ public class Connection {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			while(true) {
+			while(alive) {
 				try {
 					Message msg = (Message) ois.readObject();
 					
@@ -102,6 +107,8 @@ public class Connection {
 						controller.updateConnectedList(list);
 					}
 					
+				} catch (EOFException EOFE) {
+					//Thrown when stream is closed on program shutting down.
 				} catch (Exception e) {
 					Thread.currentThread().interrupt();
 					e.printStackTrace();

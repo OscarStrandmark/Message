@@ -80,6 +80,12 @@ public class Client {
 					Message msg;
 					msg = (Message) ois.readObject();
 					controller.processMessage(msg);
+				} catch (SocketException se) {
+					if(se.getMessage().contains("Socket closed")) {
+						//Thrown with message "socket closed" when the client is shutting down. No need to print.
+					} else {
+						se.printStackTrace();
+					}
 				} catch (Exception e) {
 					Thread.currentThread().interrupt();
 					e.printStackTrace();
