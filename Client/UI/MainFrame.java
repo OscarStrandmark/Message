@@ -23,6 +23,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import client.Controller;
 import shared.MediaMessage;
@@ -47,11 +49,12 @@ public class MainFrame extends JFrame {
 	private MainFrame thisWindow = this;
 	
 	private JList<String> messagesRecieved;
+	private ArrayList<String> messageStrings;
 	private HashMap<String,MediaMessage> messageMap;
 	
 	public MainFrame(Controller controller) {
 		this.messageMap = new HashMap<String,MediaMessage>();
-		
+		this.messageStrings = new ArrayList<String>();
 		this.controller = controller;
 		init();
 	}
@@ -90,7 +93,8 @@ public class MainFrame extends JFrame {
 		JScrollPane messagesRecievedPane = new JScrollPane();
 		messagesRecievedPane.setPreferredSize(new Dimension(200,650));
 		messagesRecieved = new JList<String>();
-		messagesRecievedPane.add(messagesRecieved);
+		messagesRecievedPane.setViewportView(messagesRecieved);
+		messagesRecieved.addListSelectionListener(new ListListener());
 		contentPane.add(messagesRecievedPane,BorderLayout.WEST);
 		
 		//CENTER
@@ -121,19 +125,31 @@ public class MainFrame extends JFrame {
 		contentPane.add(centerPanel,BorderLayout.CENTER);
 	}
 	
-	public void updateMessageList(ArrayList<MediaMessage> messageList) {
-		messageMap.clear();		
-		DefaultListModel<String> model = new DefaultListModel<String>();
-		for(MediaMessage msg : messageList) {
-			Date time = msg.getSent();
-			String key = msg.getSender().getUsername() + " - " + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
-			
-			messageMap.put(key, msg);
-			model.addElement(key);
+	public void updateMessageList(ArrayList<MediaMessage> messages) {
+		messageMap.clear();
+		messageStrings.clear();
+		
+		
+		for(MediaMessage m : messages) {
+			String s = m.getSender().getUsername() + " - " + m.getSent().getHours() + ":" + m.getSent().getMinutes() + ":" + m.getSent().getSeconds();
+			messageMap.put(s, m);
+			messageStrings.add(s);
 		}
 		
-		messagesRecieved = new JList<String>(model);
-		messagesRecieved.updateUI();
+		DefaultListModel<String> model = new DefaultListModel<String>();
+		
+		for(String s : messageStrings) {
+			model.addElement(s);
+		}
+		
+		messagesRecieved.setModel(model);
+	}
+	
+	private class ListListener implements ListSelectionListener {
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+			
+		}
 	}
 	private class wListener implements WindowListener {
 
@@ -161,6 +177,7 @@ public class MainFrame extends JFrame {
 		public void windowOpened(WindowEvent arg0) {}
 		
 	}
+	
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 

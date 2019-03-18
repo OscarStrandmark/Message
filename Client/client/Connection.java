@@ -4,6 +4,7 @@ import java.io.EOFException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -95,7 +96,6 @@ public class Connection {
 				try {
 					Message msg = (Message) ois.readObject();
 					
-					
 					if(msg instanceof MediaMessage) {
 						controller.incomingMessage((MediaMessage)msg);
 					}
@@ -109,6 +109,12 @@ public class Connection {
 					
 				} catch (EOFException EOFE) {
 					//Thrown when stream is closed on program shutting down.
+				} catch (SocketException se) {
+					if(se.getMessage().contains("Connection reset")) {
+						//Server probably closed down.
+					} else {
+						se.printStackTrace();
+					}
 				} catch (Exception e) {
 					Thread.currentThread().interrupt();
 					e.printStackTrace();

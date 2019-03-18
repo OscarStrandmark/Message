@@ -19,7 +19,7 @@ import shared.User;
 public class Connection {
 
 	private Controller controller;
-	private HashMap<User,ArrayList<Message>> unsentMessages;
+	private ConcurrentHashMap<User,ArrayList<Message>> unsentMessages;
 	private ConcurrentHashMap<User, Client> connections;
 	private Buffer<Message> messageBuffer;
 	
@@ -28,7 +28,7 @@ public class Connection {
 	public Connection(Controller controller,int port) {
 		this.connections = new ConcurrentHashMap<User, Client>();
 		this.messageBuffer = new Buffer<Message>();
-		this.unsentMessages = new HashMap<User,ArrayList<Message>>();
+		this.unsentMessages = new ConcurrentHashMap<User,ArrayList<Message>>();
 		this.controller = controller;
 		this.port = port;
 		new ClientAccepter().start();
@@ -69,24 +69,44 @@ public class Connection {
 			while(true) {
 				try {
 					Message msg = messageBuffer.get();
-
-					
-					System.out.println();
 					
 					if(msg instanceof MediaMessage) {
+						
 						List<User> receivers = ((MediaMessage) msg).getReceivers();
 						Iterator<User> receiverIter = receivers.iterator();
+						KeySetView<User,Client> keys = connections.keySet();
+						
 						while(receiverIter.hasNext()) {
-							User user = receiverIter.next();
-							if(connections.containsKey(user)) {
-								Client client = connections.get(user);
-								client.sendTo(msg);
-							} else {
-								ArrayList<Message> messages = new ArrayList<Message>();
-								messages.add(msg);
-								unsentMessages.put(user, messages);
+							
+							Iterator<User> keyIter = keys.iterator();
+							String userString = receiverIter.next().getUsername();
+							
+							while(keyIter.hasNext()) {
+								
+								User keyUser = keyIter.next();
+								
+								if(userString.equals(keyUser.getUsername())) {//Recipient online
+									Client c = connections.get(keyUser);
+									c.sendTo(msg);
+								} else {//Recipient offline
+									//add to unsent map
+									KeySetView<User,ArrayList<Message>> unsentUsersKeys = unsentMessages.keySet();
+									Iterator<User> unsentUsersIter = unsentUsersKeys.iterator();
+									while(unsentUsersIter.hasNext()) {
+										User u = unsentUsersIter.next();
+										
+										if(u.getUsername().equals(userString)) {//If user already exists in unsent messages map.
+											ArrayList<Message> list = unsentMessages.get(u);
+											list.add(msg);
+										} else { //If user DOES NOT exist in unsent messages map.
+											ArrayList<Message> list = new ArrayList<Message>();
+											list.add(msg);
+											unsentMessages.put(u, list);
+										}
+									}
+									
+								}
 							}
-							System.out.println();
 						}
 					} 
 					

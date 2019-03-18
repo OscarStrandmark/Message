@@ -83,6 +83,8 @@ public class Client {
 				} catch (SocketException se) {
 					if(se.getMessage().contains("Socket closed")) {
 						//Thrown with message "socket closed" when the client is shutting down. No need to print.
+					} else if(se.getMessage().contains("Connection reset")) {
+						//Thrown with message "Connection reset" if idk lmfao
 					} else {
 						se.printStackTrace();
 					}
