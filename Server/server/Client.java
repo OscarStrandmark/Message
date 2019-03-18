@@ -5,10 +5,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 
 import shared.Buffer;
 import shared.LoginMessage;
 import shared.Message;
+import shared.UpdateMessage;
+import shared.User;
 
 public class Client {
 
@@ -63,6 +66,15 @@ public class Client {
 			while (alive) {
 				try {
 					msg = messageBuffer.get();
+					
+					if(msg instanceof UpdateMessage) {
+						UpdateMessage uMsg = (UpdateMessage)msg;
+						ArrayList<User> ul = uMsg.getList();
+						
+						for(User u : ul) {
+							System.out.println(u.getUsername());
+						}
+					}
 					oos.writeObject(msg);
 					oos.flush();
 				} catch (Exception e) {

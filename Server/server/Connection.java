@@ -130,7 +130,7 @@ public class Connection {
 						Iterator<User> keyIter = keys.iterator();
 						while(keyIter.hasNext()) {
 							Object key = keyIter.next();
-							Client client = connections.get(key);
+							Client client = connections.get(key);					
 							client.sendTo(msg);
 						}
 					}

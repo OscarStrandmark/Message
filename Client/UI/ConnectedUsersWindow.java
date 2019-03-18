@@ -34,6 +34,7 @@ public class ConnectedUsersWindow {
 		JTA.setText(content);
 		JTA.updateUI();
 	}
+	
 	private void initialize() {
 
 		frame.setBounds(100, 100, 1000, 700);

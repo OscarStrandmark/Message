@@ -104,6 +104,7 @@ public class Connection {
 						
 					if(msg instanceof UpdateMessage) {
 						List<User> list = ((UpdateMessage) msg).getList();
+						System.out.println();
 						controller.updateConnectedList(list);
 					}
 					

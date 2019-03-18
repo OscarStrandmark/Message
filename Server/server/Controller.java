@@ -10,7 +10,7 @@ import shared.User;
 public class Controller {
 
 	private static final int PORT = 720;
-	private List<User> connectedUsers = new ArrayList<User>();
+	private ArrayList<User> connectedUsers = new ArrayList<User>();
 	private Connection connection;
 	
 	public Controller() {		
