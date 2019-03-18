@@ -1,5 +1,6 @@
 package shared;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +50,10 @@ public class MediaMessage extends Message {
 		delivered = new Date();
 	}
 
+	public void setReceivers(ArrayList<User> uList) {
+		to = uList;
+	}
+	
 	public Date getReceived() {
 		return received;
 	}

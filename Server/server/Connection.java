@@ -3,7 +3,6 @@ package server;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,7 +42,21 @@ public class Connection {
 		messageBuffer.put(msg);
 	}
 	
-
+	public void checkForUnsentMessages(User u) {
+		
+		if(unsentMessages.containsKey(u)) {
+			ArrayList<Message> messages = unsentMessages.get(u);
+			
+			for(Message m : messages) {
+				MediaMessage msg = (MediaMessage)m;
+				ArrayList<User> userlist = new ArrayList<User>();
+				userlist.add(u);
+				msg.setReceivers(userlist);
+				messageBuffer.put(msg);
+			}
+		}
+	}
+	
 	private class ClientAccepter extends Thread {
 		public void run() {
 			try (ServerSocket serverSocket = new ServerSocket(port)){

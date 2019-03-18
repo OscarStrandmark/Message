@@ -19,9 +19,8 @@ public class Controller {
 	
 	public void addnewUser(User user, Client client) {
 		connectedUsers.add(user);
-
 		connection.addConnection(user,client);
-
+		connection.checkForUnsentMessages(user);
 		sendUserList();
 	}
 
