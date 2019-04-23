@@ -3,8 +3,10 @@ package server;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentHashMap.KeySetView;
 
@@ -18,7 +20,7 @@ import shared.User;
 public class Connection {
 
 	private Controller controller;
-	private ConcurrentHashMap<User,ArrayList<Message>> unsentMessages;
+	private HashMap<User,ArrayList<Message>> unsentMessages;
 	private ConcurrentHashMap<User, Client> connections;
 	private Buffer<Message> messageBuffer;
 	
@@ -27,7 +29,7 @@ public class Connection {
 	public Connection(Controller controller,int port) {
 		this.connections = new ConcurrentHashMap<User, Client>();
 		this.messageBuffer = new Buffer<Message>();
-		this.unsentMessages = new ConcurrentHashMap<User,ArrayList<Message>>();
+		this.unsentMessages = new HashMap<User,ArrayList<Message>>();
 		this.controller = controller;
 		this.port = port;
 		new ClientAccepter().start();
@@ -36,6 +38,7 @@ public class Connection {
 	
 	public void addConnection(User user, Client client) {
 		connections.put(user, client);
+		
 	}
 	
 	public void sendMessage(Message msg) {
@@ -44,16 +47,24 @@ public class Connection {
 	
 	public void checkForUnsentMessages(User u) {
 		
-		if(unsentMessages.containsKey(u)) {
-			ArrayList<Message> messages = unsentMessages.get(u);
-			
-			for(Message m : messages) {
-				MediaMessage msg = (MediaMessage)m;
-				ArrayList<User> userlist = new ArrayList<User>();
-				userlist.add(u);
-				msg.setReceivers(userlist);
-				messageBuffer.put(msg);
+		Iterator<User> iter = unsentMessages.keySet().iterator();
+		User theUser = null;
+		while(iter.hasNext()) {
+			User user = iter.next();
+			if(u.getUsername().equals(user.getUsername())) {
+				theUser = user;
+				ArrayList<Message> messages = unsentMessages.get(user);
+				for(Message m : messages) {
+					MediaMessage msg = (MediaMessage)m;
+					ArrayList<User> userList = new ArrayList<User>();
+					userList.add(u);
+					msg.setReceivers(userList);
+					messageBuffer.put(msg);
+				}
 			}
+		}
+		if(theUser != null) {
+			unsentMessages.remove(theUser);
 		}
 	}
 	
@@ -103,9 +114,12 @@ public class Connection {
 									c.sendTo(msg);
 								} else {//Recipient offline
 									//add to unsent map
-									KeySetView<User,ArrayList<Message>> unsentUsersKeys = unsentMessages.keySet();
+									Set<User> unsentUsersKeys = unsentMessages.keySet();
 									Iterator<User> unsentUsersIter = unsentUsersKeys.iterator();
+									boolean empty = true;
+									
 									while(unsentUsersIter.hasNext()) {
+										empty = false;
 										User u = unsentUsersIter.next();
 										
 										if(u.getUsername().equals(userString)) {//If user already exists in unsent messages map.
@@ -116,6 +130,12 @@ public class Connection {
 											list.add(msg);
 											unsentMessages.put(u, list);
 										}
+									}
+									
+									if(empty) {
+										ArrayList<Message> list = new ArrayList<Message>();
+										list.add(msg);
+										unsentMessages.put(new User(userString, null), list);
 									}
 									
 								}

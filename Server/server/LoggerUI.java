@@ -74,6 +74,7 @@ public class LoggerUI extends JFrame {
 		btnUpdate.addActionListener(new ButtonListener());
 		btnUpdate.setBounds(725, 450, 102, 23);
 		contentPane.add(btnUpdate);
+		setVisible(true);
 	}
 	
 	public void updateTextArea(String str) {

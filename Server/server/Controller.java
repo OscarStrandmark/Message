@@ -12,6 +12,7 @@ public class Controller {
 	private static final int PORT = 720;
 	private ArrayList<User> connectedUsers = new ArrayList<User>();
 	private Connection connection;
+	private static Logger logger = Logger.getInstance();
 	
 	public Controller() {		
 		connection = new Connection(this, PORT);
@@ -22,12 +23,13 @@ public class Controller {
 		connection.addConnection(user,client);
 		connection.checkForUnsentMessages(user);
 		sendUserList();
+		logger.logConnect(user.getUsername());
 	}
 
 	public void removeUser(User user) {
 		connectedUsers.remove(user);
-		
 		sendUserList();
+		logger.logDisconnect(user.getUsername());
 	}
 	
 	public synchronized void sendUserList() {
@@ -36,5 +38,6 @@ public class Controller {
 	
 	public synchronized void processMessage(Message msg) {
 		connection.sendMessage(msg);
+		logger.logMessage(msg);
 	}
 }

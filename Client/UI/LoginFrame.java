@@ -4,8 +4,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -17,8 +21,6 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import client.Controller;
 
 public class LoginFrame extends JFrame {
 
@@ -51,7 +53,29 @@ public class LoginFrame extends JFrame {
 		txtUsername.setBounds(236, 235, 200, 30);
 		contentPane.add(txtUsername);
 		txtUsername.setColumns(10);
+		
+		this.addWindowListener( new WindowAdapter() {
+		    public void windowOpened( WindowEvent e ){
+		        txtUsername.requestFocus();
+		    }
+		}); 
+		
+		//Same as in clicking the "log in" button
+		Action action = new AbstractAction() {
+		    public void actionPerformed(ActionEvent e) {
+		    	if (txtUsername.getText().length() <= 0) {
+					JOptionPane.showMessageDialog(null, "Username must be longer", "ERROR", JOptionPane.ERROR_MESSAGE);
+				} else {
+					username = txtUsername.getText();
+					uiHandler.logIn(username, avatar);
+					uiHandler.showMainWindow();
+					dispose();
+				}
+		    }
+		};
 
+		txtUsername.addActionListener(action);
+		
 		JLabel lblUsername = new JLabel("Username");
 		lblUsername.setBounds(300, 210, 75, 15);
 		contentPane.add(lblUsername);
@@ -96,9 +120,7 @@ public class LoginFrame extends JFrame {
 					uiHandler.logIn(username, avatar);
 					uiHandler.showMainWindow();
 					dispose();
-					
 				}
-
 			}
 		}
 	}
