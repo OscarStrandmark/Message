@@ -77,6 +77,7 @@ public class Client {
 					}
 					oos.writeObject(msg);
 					oos.flush();
+					oos.reset();
 				} catch (Exception e) {
 					Thread.currentThread().interrupt();
 					e.printStackTrace();
