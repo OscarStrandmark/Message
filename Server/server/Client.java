@@ -13,6 +13,7 @@ import shared.Message;
 import shared.UpdateMessage;
 import shared.User;
 
+//Class that represents a users client on the server.
 public class Client {
 
 	private Controller controller;
@@ -23,9 +24,9 @@ public class Client {
 
 	private Thread sender;
 	private Thread reciever;
-	
+
 	private boolean alive = true;
-	
+
 	public Client(Controller controller, Socket socket) {
 		this.messageBuffer = new Buffer<Message>();
 		this.controller = controller;
@@ -44,13 +45,14 @@ public class Client {
 		}
 	}
 
+	//Send a message to this client
 	public void sendTo(Message msg) {
 		messageBuffer.put(msg);
 	}
 
+	//Method for killing the Client
 	public void kill() {
 		try {
-			System.out.println("kill");
 			socket.close();
 			alive = false;
 		} catch (SocketException sE) {
@@ -59,18 +61,19 @@ public class Client {
 			e.printStackTrace();
 		}
 	}
-	
+
+	//Class that handles sending Message-type objects to the userclient.
 	private class ClientSender extends Thread {
 		public void run() {
 			Message msg;
 			while (alive) {
 				try {
 					msg = messageBuffer.get();
-					
+
 					if(msg instanceof UpdateMessage) {
 						UpdateMessage uMsg = (UpdateMessage)msg;
 						ArrayList<User> ul = uMsg.getList();
-						
+
 						for(User u : ul) {
 							System.out.println(u.getUsername());
 						}
@@ -86,6 +89,7 @@ public class Client {
 		}
 	}
 
+	//Class that handles recieving all Message-type objects from the userclient to the server.
 	private class ClientReceiver extends Thread {
 		public void run() {
 			while (alive) {
@@ -97,7 +101,7 @@ public class Client {
 					if(se.getMessage().contains("Socket closed")) {
 						//Thrown with message "socket closed" when the client is shutting down. No need to print.
 					} else if(se.getMessage().contains("Connection reset")) {
-						//Thrown with message "Connection reset" if idk lmfao
+						//No need to print.
 					} else {
 						se.printStackTrace();
 					}

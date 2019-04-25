@@ -1,6 +1,5 @@
 package UI;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.JList;
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 
 import client.Controller;
 import shared.User;
@@ -40,8 +38,6 @@ public class ContactWindow {
 	private JButton btnClose = new JButton("Save and Close");
 
 	private Controller controller;
-
-	private ArrayList<String> contacts;
 
 	public ContactWindow(Controller controller) {
 		this.controller = controller;
@@ -87,7 +83,7 @@ public class ContactWindow {
 		btnFromConnected.setBounds(339, 272, 115, 29);
 		btnFromConnected.addActionListener(listener);
 		frame.getContentPane().add(btnFromConnected);
-		
+
 	}
 
 	private void initializeLists() {
@@ -97,20 +93,20 @@ public class ContactWindow {
 		DefaultListModel<String> modelContacts = new DefaultListModel<String>();
 
 		userMap = new HashMap<String,User>();
-		
+
 		for(User u : contacts) {
 			connected.remove(u);
 			userMap.put(u.getUsername(), u);
 			modelContacts.addElement(u.getUsername());
 		}
-		
+
 		for(User u : connected) {
 			userMap.put(u.getUsername(),u);
 			modelConnected.addElement(u.getUsername());
 		}
 
 		listConnected.setModel(modelConnected);
-		listConnected.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
+		listConnected.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listContacts.setModel(modelContacts);
 		listContacts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	}
@@ -120,71 +116,71 @@ public class ContactWindow {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == btnClose) {
-				
+
 				ListModel<String> model = listContacts.getModel();
 				ArrayList<User> newContacts = new ArrayList<User>();
-				
+
 				for (int i = 0; i < model.getSize(); i++) {
 					String username = model.getElementAt(i);
 					newContacts.add(userMap.get(username));
 				}
-				
+
 				controller.writeContacts(newContacts);
 				frame.dispose();
 			}
 
 			if (e.getSource() == btnFromContacts) {
-				
+
 				int index = listContacts.getSelectedIndex();
-				
+
 				ListModel<String> oldModelConnected = listConnected.getModel();
 				DefaultListModel<String> newModelConnected = new DefaultListModel<String>();
-			
+
 				ListModel<String> oldModelContacts = listContacts.getModel();
 				DefaultListModel<String> newModelContacts = new DefaultListModel<String>();
-				
+
 				for (int i = 0; i < oldModelConnected.getSize(); i++) {
 					newModelConnected.addElement(oldModelConnected.getElementAt(i));
 				}
 				newModelConnected.addElement(oldModelContacts.getElementAt(index));
-				
+
 				for (int i = 0; i < oldModelContacts.getSize(); i++) {
 					if(i != index) {
 						newModelContacts.addElement(oldModelContacts.getElementAt(i));
 					}
 				}
-				
+
 				listConnected.setModel(newModelConnected);
 				listContacts.setModel(newModelContacts);
-				
+
 			}
 
 			if (e.getSource() == btnFromConnected) {
-				
+
 				int index = listConnected.getSelectedIndex();
-				
+
 				ListModel<String> oldModelConnected = listConnected.getModel();
 				DefaultListModel<String> newModelConnected = new DefaultListModel<String>();
-			
+
 				ListModel<String> oldModelContacts = listContacts.getModel();
 				DefaultListModel<String> newModelContacts = new DefaultListModel<String>();
-				
-				
+
+
 				for (int i = 0; i < oldModelContacts.getSize(); i++) {
 					newModelContacts.addElement(oldModelContacts.getElementAt(i));
 				}
-				
+
 				newModelContacts.addElement(oldModelConnected.getElementAt(index));
-				
+
 				for (int i = 0; i < oldModelConnected.getSize(); i++) {
 					if(i != index) {
 						newModelConnected.addElement(oldModelConnected.getElementAt(i));
 					}
 				}
-				
+
 				listConnected.setModel(newModelConnected);
 				listContacts.setModel(newModelContacts);
-				
+
 			}
 		}
 	}

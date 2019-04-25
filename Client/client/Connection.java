@@ -26,23 +26,24 @@ public class Connection {
 	private Controller controller;
 	private String address;
 	private int port;
-	
+
 	boolean alive;
-	
+
 	private Thread sender;
 	private Thread listener;
-	
+
 	public Connection(String address, int port, Controller controller) {
 		messageBuffer = new Buffer<Message>();
 		this.controller = controller;
 		this.address = address;
 		this.port = port;
 	}
-	
+
 	public void sendMessage(Message msg) {
 		messageBuffer.put(msg);
 	}
-	
+
+	//Connect to the server
 	public void connect(User user) {
 		try {
 			this.alive = true;
@@ -57,14 +58,16 @@ public class Connection {
 			JOptionPane.showMessageDialog(null, "No server found");
 		}
 	}
-	
+
+	//Disconnect from the server
 	public void disconnect(User me) {
 		alive = false;
 		messageBuffer.put(new DisconnectMessage(me));
 		listener.interrupt();
 		sender.interrupt();
 	}
-	
+
+	//private class that takes Message-objects from the messageBuffer and writes them to the object stream.
 	private class ServerSender extends Thread {
 		public void run() {
 			try {
@@ -84,7 +87,8 @@ public class Connection {
 			}
 		}
 	}
-	
+
+	//Private class that recieves incoming Message-objects and decides what to do with them.
 	private class ServerListener extends Thread {
 		public void run() {
 			try {
@@ -95,19 +99,19 @@ public class Connection {
 			while(alive) {
 				try {
 					Message msg = (Message) ois.readObject();
-					
+
 					if(msg instanceof MediaMessage) {
 						controller.incomingMessage((MediaMessage)msg);
 					}
-					
-					else 
-						
+
+					else
+
 					if(msg instanceof UpdateMessage) {
 						List<User> list = ((UpdateMessage) msg).getList();
 						System.out.println();
 						controller.updateConnectedList(list);
 					}
-					
+
 				} catch (EOFException EOFE) {
 					//Thrown when stream is closed on program shutting down.
 				} catch (SocketException se) {

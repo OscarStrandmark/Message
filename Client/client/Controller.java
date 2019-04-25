@@ -47,6 +47,7 @@ public class Controller {
 		readContactsFromFile();
 	}
 
+	//Read contacts from file, ran on startup.
 	private void readContactsFromFile() {
 		File folders = new File(FILEPATH_CONTACTS_FOLDER);
 		if (!folders.exists()) {
@@ -73,8 +74,8 @@ public class Controller {
 	}
 
 	/**
-	 * Called when a user is added to the contacts;
-	 * 
+	 * Method that writes the contacts to the filepath specified in the static variable
+	 *
 	 * @param user
 	 */
 	public void writeContacts(ArrayList<User> users) {

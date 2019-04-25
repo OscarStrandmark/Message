@@ -23,7 +23,7 @@ public class Logger {
 	private BufferedReader br;
 	private LoggerUI ui;
 	private static Logger instance = new Logger();
-	
+
 	private Logger() {
 		ui = new LoggerUI(this);
 		try {
@@ -33,11 +33,11 @@ public class Logger {
 			e.printStackTrace();
 		}
 	}
-
+	//Singleton type class
 	public static Logger getInstance() {
 		return instance;
 	}
-	
+	//Method for logging a new incoming connection
 	public void logConnect(String username) {
 		try {
 			String str = getDateFormatted() + " " + "User: " + username + " " + "connected to the server.";
@@ -48,7 +48,7 @@ public class Logger {
 			System.err.println(e);
 		}
 	}
-	
+	//Method for logging the loss of a connection
 	public void logDisconnect(String username) {
 		try {
 			String str = getDateFormatted() + " " + "User: " + username + " " + "disconnected from the server.";
@@ -59,7 +59,7 @@ public class Logger {
 			System.err.println(e);
 		}
 	}
-	
+	//Method for logging a message sent through the server.
 	public void logMessage(Message msg) {
 		if(msg instanceof MediaMessage) {
 			MediaMessage mmsg = (MediaMessage)msg;
@@ -68,7 +68,7 @@ public class Logger {
 				str += " " + "Message handled: from user: " + mmsg.getSender().getUsername().toLowerCase() + "." + " To: ";
 				List<User> recipients = mmsg.getReceivers();
 				Iterator<User> iter = recipients.iterator();
-				
+
 				while(iter.hasNext()) {
 					str += iter.next().getUsername() + ", ";
 				}
@@ -82,14 +82,14 @@ public class Logger {
 			}
 		}
 	}
-	
+	//Method called when the "update" button is pressed on the logger interface
 	public void updateView(LocalDate Dfrom, LocalTime Tfrom, LocalDate Dto, LocalTime Tto) {
 		String displayString = "Displaying traffic from: " + "\n";
 		displayString += Dfrom.getYear() + "/" + Dfrom.getMonthValue() + "/" + Dfrom.getDayOfMonth() + " - " + Tfrom.getHour() + ":" + Tfrom.getMinute() + "\n";
 		displayString += "to: " + "\n";
 		displayString += Dto.getYear() + "/" + Dto.getMonthValue() + "/" + Dto.getDayOfMonth() + " - " + Tto.getHour() + ":" + Tto.getMinute() + "\n";
 		displayString += "==============================================" + "\n";
-		
+
 		try {
 			while(br.ready()) {
 				String line = br.readLine();
@@ -98,8 +98,8 @@ public class Logger {
 				int date  = Integer.parseInt(line.substring(9, 11));
 				int hour  = Integer.parseInt(line.substring(12, 14));
 				int min   = Integer.parseInt(line.substring(15, 17));
-				
-				//Fulaste radena kod jag skrivit hela mitt liv, fick aldrig .isAfter() att fungera. 
+
+				//Monstrosity. Handling dates is terrible. If I had time, would convert to UNIX time. :( /Oscar
 				if(year >= Dfrom.getYear() && year <= Dto.getYear()) {
 					System.out.println(1);
 					if(month >= Dfrom.getMonthValue() && month <= Dto.getMonthValue()) {
@@ -116,13 +116,6 @@ public class Logger {
 								System.out.println(4);
 
 							}
-							/*
-							if(hour >= Tfrom.getHour() && hour <= Tto.getHour()) {
-								if(min >= Tfrom.getMinute() && min <= Tto.getMinute()) {
-									displayString += line + "\n";
-								}
-							}
-							*/
 						}
 					}
 				}
@@ -132,7 +125,7 @@ public class Logger {
 		}
 		ui.updateTextArea(displayString);
 	}
-	
+	//Get the current time in the specified format. 
 	private String getDateFormatted() {
 		//Format: [YYYY/MM/DD/HH:MM]
 		Calendar cal = Calendar.getInstance();
@@ -140,25 +133,25 @@ public class Logger {
 		String fillDate = "";
 		String fillHour = "";
 		String fillMinute = "";
-		
+
 		int year  = cal.get(Calendar.YEAR);
 		int month = cal.get(Calendar.MONTH) + 1;
 		int date  = cal.get(Calendar.DATE);
 		int hour  = cal.get(Calendar.HOUR_OF_DAY);
 		int min   = cal.get(Calendar.MINUTE);
-		
+
 		if(month < 10) {
 			fillMonth = "0";
 		}
-		
+
 		if(date < 10) {
 			fillDate = "0";
 		}
-		
+
 		if(hour < 10) {
 			fillHour = "0";
 		}
-		
+
 		if(min < 10) {
 			fillMinute = "0";
 		}
