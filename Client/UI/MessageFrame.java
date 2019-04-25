@@ -17,7 +17,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import client.Controller;
-import shared.MediaMessage;
 import shared.User;
 
 public class MessageFrame extends JFrame {
@@ -25,22 +24,21 @@ public class MessageFrame extends JFrame {
 	private JPanel contentPane;
 	private JTextField textRecipients;
 	private JTextField textImgPath;
-	
+
 	private JTextArea textArea;
-	
+
 	private JButton btnAddReciever;
 	private JButton btnAddImage;
 	private JButton btnSend;
-	
+
 	private MessageFrame thisWindow = this;
 	private Controller controller;
-	
+
 	private List<User> recipients;
-	private String MessageText;
 	private ImageIcon MessageImage;
-	
-	
-	
+
+
+
 	public MessageFrame(Controller controller) {
 		this.controller = controller;
 		init();
@@ -87,7 +85,7 @@ public class MessageFrame extends JFrame {
 		btnAddImage.addActionListener(new ButtonListener());
 		contentPane.add(btnAddImage);
 	}
-	
+
 	public void setRecipients(ArrayList<User> recipients) {
 		this.recipients = recipients;
 		String users = "";
@@ -101,18 +99,18 @@ public class MessageFrame extends JFrame {
 	private class ButtonListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			
+
 			if(e.getSource() == btnAddReciever) {
 				new MessageRecipientsFrame(controller,thisWindow);
 			}
-			
+
 			if(e.getSource() == btnSend) {
 				String text = textArea.getText();
 				ImageIcon img = MessageImage;
 				controller.sendMessage(text, img, recipients);
 				dispose();
 			}
-			
+
 			if(e.getSource() == btnAddImage) {
 				JFileChooser JFC = new JFileChooser();
 				FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG & PNG Images", "jpg", "png");

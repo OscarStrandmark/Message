@@ -1,7 +1,6 @@
 package server;
 
 import java.util.ArrayList;
-import java.util.List;
 import server.Logger;
 import shared.Message;
 import shared.UpdateMessage;
@@ -13,11 +12,11 @@ public class Controller {
 	private ArrayList<User> connectedUsers = new ArrayList<User>();
 	private Connection connection;
 	private static Logger logger = Logger.getInstance();
-	
-	public Controller() {		
+
+	public Controller() {
 		connection = new Connection(this, PORT);
 	}
-	
+
 	public void addnewUser(User user, Client client) {
 		connectedUsers.add(user);
 		connection.addConnection(user,client);
@@ -31,11 +30,11 @@ public class Controller {
 		sendUserList();
 		logger.logDisconnect(user.getUsername());
 	}
-	
+
 	public synchronized void sendUserList() {
 		connection.sendMessage(new UpdateMessage(new User("SERVER",null), connectedUsers));
 	}
-	
+
 	public synchronized void processMessage(Message msg) {
 		connection.sendMessage(msg);
 		logger.logMessage(msg);

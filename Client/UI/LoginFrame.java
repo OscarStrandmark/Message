@@ -53,13 +53,13 @@ public class LoginFrame extends JFrame {
 		txtUsername.setBounds(236, 235, 200, 30);
 		contentPane.add(txtUsername);
 		txtUsername.setColumns(10);
-		
+
 		this.addWindowListener( new WindowAdapter() {
 		    public void windowOpened( WindowEvent e ){
 		        txtUsername.requestFocus();
 		    }
-		}); 
-		
+		});
+
 		//Same as in clicking the "log in" button
 		Action action = new AbstractAction() {
 		    public void actionPerformed(ActionEvent e) {
@@ -75,7 +75,7 @@ public class LoginFrame extends JFrame {
 		};
 
 		txtUsername.addActionListener(action);
-		
+
 		JLabel lblUsername = new JLabel("Username");
 		lblUsername.setBounds(300, 210, 75, 15);
 		contentPane.add(lblUsername);

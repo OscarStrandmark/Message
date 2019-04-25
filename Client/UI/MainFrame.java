@@ -10,9 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -32,29 +30,25 @@ import javax.swing.text.BadLocationException;
 
 import client.Controller;
 import shared.MediaMessage;
-import shared.Message;
-import shared.User;
 
 public class MainFrame extends JFrame {
 
 	private Controller controller;
-	
+
 	private JPanel contentPane;
 	private JTextPane jtp;
-	
+
 	private JButton btnContacts;
 	private JButton btnNewMessage;
 	private JButton btnConnectedUsers;
 
 	private JLabel lblName;
 	private JLabel lblTimestamp;
-	
-	private MainFrame thisWindow = this;
-	
+		
 	private JList<String> messagesRecievedList;
 	private ArrayList<String> messageStrings;
 	private HashMap<String,MediaMessage> messageMap;
-	
+
 	public MainFrame(Controller controller) {
 		this.messageMap = new HashMap<String,MediaMessage>();
 		this.messageStrings = new ArrayList<String>();
@@ -91,7 +85,7 @@ public class MainFrame extends JFrame {
 		btnConnectedUsers = new JButton("Connected Users");
 		btnConnectedUsers.addActionListener(listener);
 		panel.add(btnConnectedUsers);
-		
+
 		// WEST
 		JScrollPane messagesRecievedPane = new JScrollPane();
 		messagesRecievedPane.setPreferredSize(new Dimension(200,650));
@@ -100,80 +94,80 @@ public class MainFrame extends JFrame {
 		messagesRecievedPane.setViewportView(messagesRecievedList);
 		messagesRecievedList.addListSelectionListener(new ListListener());
 		contentPane.add(messagesRecievedPane,BorderLayout.WEST);
-		
+
 		//CENTER
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel northPanel = new JPanel();
 		centerPanel.add(northPanel, BorderLayout.NORTH);
 		northPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		
+
 		JLabel lblFrom = new JLabel("Message from user: ");
 		northPanel.add(lblFrom);
-		
+
 		lblName = new JLabel("Name");
 		northPanel.add(lblName);
-		
+
 		lblTimestamp = new JLabel("Timestamp");
 		northPanel.add(lblTimestamp);
 		centerPanel.add(northPanel,BorderLayout.NORTH);
-		
+
 		jtp = new JTextPane();
 		jtp.setFont(new Font("Arial bold",Font.PLAIN,24));
 		jtp.setEditable(false);
 		centerPanel.add(jtp,BorderLayout.CENTER);
-		
+
 		contentPane.add(centerPanel,BorderLayout.CENTER);
 	}
-	
+
 	public void updateMessageList(ArrayList<MediaMessage> messages) {
 		messageMap.clear();
 		messageStrings.clear();
-		
+
 		for(MediaMessage m : messages) {
 			String s = m.getSender().getUsername() + " - " + m.getSent().getHours() + ":" + m.getSent().getMinutes() + ":" + m.getSent().getSeconds();
 			messageMap.put(s, m);
 			messageStrings.add(s);
 		}
-		
+
 		DefaultListModel<String> model = new DefaultListModel<String>();
-		
+
 		for(String s : messageStrings) {
 			model.addElement(s);
 		}
-		
+
 		messagesRecievedList.setModel(model);
 	}
-	
+
 	private class ListListener implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			jtp.setText(null);
-			
+
 			int index = messagesRecievedList.getSelectedIndex();
-			
+
 			ListModel<String> model = messagesRecievedList.getModel();
-			
+
 			MediaMessage msg = messageMap.get(model.getElementAt(index));
-			
+
 			lblName.setText(msg.getSender().getUsername());
 			String timestamp = msg.getSent().toString();
 			lblTimestamp.setText(timestamp);
-			
+
 			ImageIcon img = msg.getImage();
 
 			if(img != null) {
 				jtp.insertIcon(img);
 
 			}
-			
+
 			try {
 				jtp.getDocument().insertString(0, msg.getText() + "\n", null);
 			} catch (BadLocationException BLE) {
 				BLE.printStackTrace();
 			}
-			
+
 		}
 	}
 	private class wListener implements WindowListener {
@@ -188,9 +182,9 @@ public class MainFrame extends JFrame {
 		public void windowDeiconified(WindowEvent arg0) {}
 		public void windowIconified(WindowEvent arg0) {}
 		public void windowOpened(WindowEvent arg0) {}
-		
+
 	}
-	
+
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 

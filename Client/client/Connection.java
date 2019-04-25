@@ -27,7 +27,7 @@ public class Connection {
 	private String address;
 	private int port;
 
-	boolean alive;
+	private boolean alive;
 
 	private Thread sender;
 	private Thread listener;

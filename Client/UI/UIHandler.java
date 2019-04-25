@@ -11,22 +11,20 @@ import shared.User;
 public class UIHandler {
 
 	private Controller controller;
-	private List<User> userList;
 	private MainFrame mainWindow;
-	
+
 	public UIHandler(Controller controller) {
 		this.controller = controller;
-		this.userList = controller.getConnectedUsers();
 		
 		JFrame login = new LoginFrame(this);
 		login.setVisible(true);
 	}
-	
+
 	public void logIn(String username, ImageIcon avatar) {
 		controller.login(username, avatar);
-		
+
 	}
-	
+
 	public void showMainWindow() {
 		mainWindow = new MainFrame(controller);
 	}

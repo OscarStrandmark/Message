@@ -22,9 +22,6 @@ public class Client {
 	private ObjectOutputStream oos;
 	private Buffer<Message> messageBuffer;
 
-	private Thread sender;
-	private Thread reciever;
-
 	private boolean alive = true;
 
 	public Client(Controller controller, Socket socket) {
