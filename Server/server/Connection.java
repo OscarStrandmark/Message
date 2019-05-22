@@ -3,7 +3,6 @@ package server;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -14,13 +13,14 @@ import shared.Buffer;
 import shared.DisconnectMessage;
 import shared.MediaMessage;
 import shared.Message;
+import shared.SynchedHashMap;
 import shared.UpdateMessage;
 import shared.User;
 
 public class Connection {
 
 	private Controller controller;
-	private HashMap<User,ArrayList<Message>> unsentMessages;
+	private SynchedHashMap<User,ArrayList<Message>> unsentMessages;
 	private ConcurrentHashMap<User, Client> connections;
 	private Buffer<Message> messageBuffer;
 
@@ -29,7 +29,7 @@ public class Connection {
 	public Connection(Controller controller,int port) {
 		this.connections = new ConcurrentHashMap<User, Client>();
 		this.messageBuffer = new Buffer<Message>();
-		this.unsentMessages = new HashMap<User,ArrayList<Message>>();
+		this.unsentMessages = new SynchedHashMap<User,ArrayList<Message>>();
 		this.controller = controller;
 		this.port = port;
 		new ClientAccepter().start();

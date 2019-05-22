@@ -6,9 +6,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -89,7 +93,15 @@ public class Logger {
 		displayString += "to: " + "\n";
 		displayString += Dto.getYear() + "/" + Dto.getMonthValue() + "/" + Dto.getDayOfMonth() + " - " + Tto.getHour() + ":" + Tto.getMinute() + "\n";
 		displayString += "==============================================" + "\n";
-
+				
+		ZoneId zoneId = ZoneId.systemDefault();
+		long UNIX_FROM = Dfrom.atStartOfDay(zoneId).toEpochSecond();
+			 UNIX_FROM = UNIX_FROM + (Tfrom.getHour() * 60 * 60) + (Tfrom.getMinute() * 60) + (Tfrom.getSecond());
+			 
+		long UNIX_TO   = Dto.atStartOfDay(zoneId).toEpochSecond();getClass();
+			 UNIX_TO   = UNIX_TO + (Tto.getHour() * 60 * 60) + (Tto.getMinute() * 60) + (Tto.getSecond());
+		
+		
 		try {
 			while(br.ready()) {
 				String line = br.readLine();
@@ -98,8 +110,17 @@ public class Logger {
 				int date  = Integer.parseInt(line.substring(9, 11));
 				int hour  = Integer.parseInt(line.substring(12, 14));
 				int min   = Integer.parseInt(line.substring(15, 17));
+				
+				long UNIX_MSG = new Date(year, month, date, hour, min).getTime();
 
 				//Monstrosity. Handling dates is terrible. If I had time, would convert to UNIX time. :( /Oscar
+				
+				
+				
+				if(UNIX_MSG < UNIX_TO && UNIX_MSG > UNIX_FROM) {
+					displayString += line + "\n";
+				}
+				/*
 				if(year >= Dfrom.getYear() && year <= Dto.getYear()) {
 					System.out.println(1);
 					if(month >= Dfrom.getMonthValue() && month <= Dto.getMonthValue()) {
@@ -119,12 +140,14 @@ public class Logger {
 						}
 					}
 				}
+				*/
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		ui.updateTextArea(displayString);
 	}
+	
 	//Get the current time in the specified format. 
 	private String getDateFormatted() {
 		//Format: [YYYY/MM/DD/HH:MM]
