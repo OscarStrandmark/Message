@@ -3,11 +3,11 @@ package shared;
 import java.util.HashMap;
 import java.util.Set;
 
-public class SynchedHashMap<K,V> {
+public class SynchronizedHashMap<K,V> {
 	
 	private HashMap<K, V> map;
 	
-	public SynchedHashMap() {
+	public SynchronizedHashMap() {
 		map = new HashMap<K,V>();
 	}
 	

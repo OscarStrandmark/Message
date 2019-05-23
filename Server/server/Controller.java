@@ -14,7 +14,16 @@ public class Controller {
 	private static Logger logger = Logger.getInstance();
 
 	public Controller() {
+		logger.setUI(new LoggerUI(logger));
 		connection = new Connection(this, PORT);
+		
+		//On program shutdown, write log to file
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				System.out.println("it ran");
+				logger.write();
+			}
+		});
 	}
 
 	public void addnewUser(User user, Client client) {

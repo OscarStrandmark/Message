@@ -13,14 +13,14 @@ import shared.Buffer;
 import shared.DisconnectMessage;
 import shared.MediaMessage;
 import shared.Message;
-import shared.SynchedHashMap;
+import shared.SynchronizedHashMap;
 import shared.UpdateMessage;
 import shared.User;
 
 public class Connection {
 
 	private Controller controller;
-	private SynchedHashMap<User,ArrayList<Message>> unsentMessages;
+	private SynchronizedHashMap<User,ArrayList<Message>> unsentMessages;
 	private ConcurrentHashMap<User, Client> connections;
 	private Buffer<Message> messageBuffer;
 
@@ -29,7 +29,7 @@ public class Connection {
 	public Connection(Controller controller,int port) {
 		this.connections = new ConcurrentHashMap<User, Client>();
 		this.messageBuffer = new Buffer<Message>();
-		this.unsentMessages = new SynchedHashMap<User,ArrayList<Message>>();
+		this.unsentMessages = new SynchronizedHashMap<User,ArrayList<Message>>();
 		this.controller = controller;
 		this.port = port;
 		new ClientAccepter().start();
