@@ -3,7 +3,6 @@ package server;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -25,9 +24,7 @@ public class Logger {
 	private static Logger instance = new Logger();
 
 	private Logger() {
-		
 		thisSession = new ArrayList<String>();
-		
 	}
 
 	// Singleton type class
@@ -43,19 +40,21 @@ public class Logger {
 	public void write() {
 		File folder = new File(FILEPATH);
 		if(folder.exists()) {
-			System.out.println("yes");
 		} else {
-			System.out.println("no");
+			folder.mkdirs();
 		}
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(new File("log" + (new Date().getTime())+".txt")));
+			File file = new File("C:\\dev\\ServerLogFile\\log" + (new Date().getTime()) + ".txt");
+			
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 		
 			for(String s : thisSession) {
 				bw.write(s);
 				bw.newLine();
 				bw.flush();
 			}
-		
+			
+			file.createNewFile();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

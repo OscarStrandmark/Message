@@ -1,6 +1,9 @@
 package server;
 
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import server.Logger;
 import shared.Message;
 import shared.UpdateMessage;
@@ -12,20 +15,20 @@ public class Controller {
 	private ArrayList<User> connectedUsers = new ArrayList<User>();
 	private Connection connection;
 	private static Logger logger = Logger.getInstance();
+	private KillSwitchUI killSwitch;
+
 
 	public Controller() {
 		logger.setUI(new LoggerUI(logger));
 		connection = new Connection(this, PORT);
-		
-		//On program shutdown, write log to file
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				System.out.println("it ran");
-				logger.write();
-			}
-		});
+		killSwitch = new KillSwitchUI(this);
 	}
 
+	public void kill() {
+		logger.write();
+		System.exit(1);
+	}
+	
 	public void addnewUser(User user, Client client) {
 		connectedUsers.add(user);
 		connection.addConnection(user,client);
